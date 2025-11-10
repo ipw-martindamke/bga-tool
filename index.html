@@ -885,6 +885,32 @@ async function callGeminiAPI(prompt, isJsonMode = false) {
     };
 
   </script>
+<script>
+/* Exponiere Handler-Funktionen für inline onClick-Aufrufe */
+(function () {
+  function expose(name) {
+    try {
+      // Greift auf bereits definierte Funktionen zu und hängt sie an window an
+      if (typeof window[name] !== 'function' && typeof eval(name) === 'function') {
+        window[name] = eval(name);
+      }
+    } catch (_) { /* ignorieren */ }
+  }
+
+  [
+    'handlePrimarySelection',
+    'handleBasicCompSelection',
+    'handleAdvancedCompSelection',
+    'evaluateCase',
+    'switchMode',                 // falls du so benennst
+    'setMode',                    // falls Buttons setMode('basic'|'advanced') nutzen
+    'generateNewCase',
+    'explainClinicalSignificance',
+    'resetSelections',
+    'toggleNormwerteAccordion'
+  ].forEach(expose);
+})();
+</script>
 
 </body>
 </html>
