@@ -1,517 +1,967 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>BGA-Trainer (Basis / Advanced)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Tailwind CDN (für dieses Trainings-Tool okay) -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BGA-Trainer Pro</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     body {
-      background: #0f172a;
-      color: #111827;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6;
     }
-    .header {
-      background: linear-gradient(to right, #111827, #1e293b);
-      color: #e5e7eb;
-      padding: 16px 20px;
-      border-radius: 16px;
-      margin-bottom: 20px;
-      box-shadow: 0 10px 30px rgba(15,23,42,0.6);
-    }
+    
     .card {
       background-color: #ffffff;
-      border-radius: 14px;
-      padding: 18px 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 10px 25px rgba(15,23,42,0.14);
-      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+      margin-bottom: 20px;
     }
+    
+    .header {
+      background: linear-gradient(90deg, #1e3a8a, #2563eb);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    
     .bga-table {
       display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(110px,1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 16px;
     }
+    
     .bga-item {
       position: relative;
       background-color: #f9fafb;
       border: 1px solid #e5e7eb;
       border-radius: 8px;
-      padding: 10px;
+      padding: 12px;
       text-align: center;
     }
     .bga-item label {
       display: block;
-      font-size: 0.75rem;
-      color: #6b7280;
+      font-size: 0.875rem;
+      color: #4b5563;
       font-weight: 500;
     }
     .bga-item input {
-      font-size: 1.3rem;
+      font-size: 1.5rem;
       font-weight: 700;
       color: #111827;
       width: 100%;
       border: none;
       background: transparent;
       text-align: center;
-      padding-top: 2px;
+      padding: 4px 0 0;
       outline: none;
     }
+    
+    .bga-item.norm-green { border-color: #10b981; background-color: #f0fdf4; }
+    .bga-item.norm-red { border-color: #ef4444; background-color: #fef2f2; }
+    .bga-item.norm-blue { border-color: #3b82f6; background-color: #eff6ff; }
+
     .tooltip {
       position: absolute;
-      top: 4px;
-      right: 4px;
+      top: 2px;
+      right: 5px;
       cursor: help;
       color: #9ca3af;
-      font-size: 0.65rem;
     }
-    .tooltip-text {
+    .tooltip .tooltip-text {
       visibility: hidden;
-      position: absolute;
-      z-index: 10;
-      width: 210px;
-      bottom: 120%;
-      left: 50%;
-      transform: translateX(-50%);
+      width: 220px;
       background-color: #111827;
       color: #fff;
-      padding: 6px;
-      border-radius: 6px;
-      font-size: 0.7rem;
       text-align: left;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
       opacity: 0;
-      transition: opacity 0.2s;
+      transition: opacity 0.3s;
+      font-size: 0.75rem;
     }
     .tooltip:hover .tooltip-text {
       visibility: visible;
       opacity: 1;
     }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0.6rem 0.9rem;
-      border-radius: 0.6rem;
-      font-weight: 600;
-      font-size: 0.85rem;
-      border: none;
+    
+    .response-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 640px) {
+      .response-list.two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .response-list li {
+      margin: 0;
+    }
+    .response-list input[type="radio"] {
+      display: none;
+    }
+    .response-list label {
+      display: block;
+      padding: 16px;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      background-color: #f3f4f6;
+      color: #374151;
       cursor: pointer;
-      transition: transform 0.08s, box-shadow 0.08s, background-color 0.15s;
-      white-space: nowrap;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+    
+    .response-list input[type="radio"]:checked + label {
+      background-color: #3b82f6;
+      color: white;
+      border-color: #2563eb;
+    }
+    
+    .response-list input[type="radio"]:disabled + label,
+    fieldset:disabled .response-list label {
+        background-color: #f3f4f6;
+        color: #9ca3af;
+        cursor: not-allowed;
+        border-color: #e5e7eb;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: none;
     }
     .btn-primary {
-      background-color: #111827;
-      color: #f9fafb;
+      background-color: #2563eb;
+      color: white;
     }
     .btn-primary:hover {
-      background-color: #0f172a;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(15,23,42,0.3);
+      background-color: #1d4ed8;
     }
     .btn-secondary {
       background-color: #e5e7eb;
-      color: #111827;
+      color: #374151;
     }
     .btn-secondary:hover {
       background-color: #d1d5db;
     }
-    .btn-gemini {
-      background-color: #f97316;
-      color: #111827;
-    }
-    .btn-gemini:hover {
-      background-color: #ea580c;
-      color: #111827;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(234,88,12,0.35);
-    }
+
     .mode-switch {
-      display: inline-flex;
-      background-color: #111827;
-      border-radius: 9999px;
+      display: flex;
+      border-radius: 8px;
+      background-color: #e5e7eb;
       padding: 4px;
-      gap: 4px;
+      width: fit-content;
     }
-    .mode-switch input {
+    .mode-switch input[type="radio"] {
       display: none;
     }
     .mode-switch label {
-      padding: 4px 10px;
-      font-size: 0.75rem;
-      border-radius: 9999px;
-      cursor: pointer;
-      color: #9ca3af;
-      font-weight: 500;
-    }
-    .mode-switch input:checked + label {
-      background-color: #f97316;
-      color: #111827;
-    }
-    .result-box {
-      background-color: #f9fafb;
-      border-radius: 10px;
-      padding: 10px;
-      font-size: 0.8rem;
-      margin-top: 10px;
-      border: 1px solid #e5e7eb;
-    }
-    textarea.prompt-box {
-      width: 100%;
-      margin-top: 8px;
-      padding: 6px 8px;
-      font-size: 0.7rem;
+      padding: 8px 16px;
       border-radius: 6px;
-      border: 1px solid #d1d5db;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      resize: vertical;
+      cursor: pointer;
+      font-weight: 500;
+      color: #4b5563;
+      transition: all 0.2s ease;
     }
+    .mode-switch input[type="radio"]:checked + label {
+      background-color: #ffffff;
+      color: #111827;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    details {
+      background-color: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    details summary {
+      padding: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #1f2937;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    details summary::-webkit-details-marker {
+      display: none;
+    }
+    details .content {
+      padding: 0 16px 16px;
+      border-top: 1px solid #e5e7eb;
+    }
+    
+    .clinical-explanation {
+      background-color: #eff6ff;
+      border: 1px solid #3b82f6;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .clinical-explanation h4 {
+      margin: 0 0 8px;
+      color: #1e40af;
+      font-size: 0.95rem;
+    }
+    .clinical-explanation p {
+      margin: 0 0 8px;
+      font-size: 0.875rem;
+      line-height: 1.5;
+    }
+    
+    .hidden {
+      display: none;
+    }
+
   </style>
 </head>
 <body class="p-4 md:p-8">
-<div class="max-w-3xl mx-auto">
 
-  <!-- Header -->
-  <header class="header">
-    <div class="flex justify-between items-center">
-      <h1 class="text-xl md:text-2xl font-bold">BGA-Trainer (Basis / Advanced)</h1>
-      <div id="mode-chip" class="bg-white/10 text-xs font-semibold px-3 py-1 rounded-full">
-        BASIS MODUS
+  <div class="max-w-3xl mx-auto">
+    
+    <header class="header">
+      <div class="flex justify-between items-center">
+        <h1 class="text-xl md:text-2xl font-bold">BGA-Trainer Pro</h1>
+        <div id="mode-chip" class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">
+          BASIS MODUS
+        </div>
+      </div>
+      <p class="text-sm text-white/80 mt-2">Systematisches BGA-Training für die Intensivpflege</p>
+    </header>
+
+    <div class="card flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800 m-0">Lern-Modus</h2>
+        <p class="text-gray-600 m-0 text-sm">Wähle deinen Erfahrungsgrad.</p>
+      </div>
+      <div class="mode-switch">
+        <input type="radio" id="mode-basic" name="mode" value="basic" checked>
+        <label for="mode-basic">Basis</label>
+        <input type="radio" id="mode-advanced" name="mode" value="advanced">
+        <label for="mode-advanced">Advanced</label>
+        <input type="radio" id="mode-mixed" name="mode" value="mixed">
+        <label for="mode-mixed">Mixed</label>
       </div>
     </div>
-    <p class="text-xs text-gray-400 mt-1">
-      Übungstool für Säure-Basen-Analyse. Kein Medizinprodukt. Keine klinische Anwendung.
-    </p>
-  </header>
 
-  <!-- Modus-Umschalter -->
-  <div class="card flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-    <div>
-      <h2 class="text-sm font-semibold text-gray-800 m-0">Lern-Modus</h2>
-      <p class="text-xs text-gray-600 m-0">Wähle den Schwierigkeitsgrad der Fälle.</p>
+    <div class="card">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-gray-800 m-0">
+          Fall #<span id="case-id">1</span>
+        </h2>
+        <span id="case-complexity" class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800"></span>
+      </div>
+
+      <div id="clinical-context" class="mb-4 p-3 bg-blue-50 border-l-4 border-blue-500 text-sm text-gray-700 rounded">
+        Klinischer Kontext wird hier angezeigt...
+      </div>
+
+      <h3 class="text-base font-semibold text-gray-700 mb-3">Grundwerte</h3>
+      <div class="bga-table mb-4">
+        <div class="bga-item" id="item-ph">
+          <label for="ph">pH</label>
+          <input type="number" id="ph" step="0.01" value="7.40" readonly>
+          <div class="tooltip">?
+            <span class="tooltip-text">Säure-Basen-Status. Niedrig = Azidose, Hoch = Alkalose.</span>
+          </div>
+        </div>
+        <div class="bga-item" id="item-pco2">
+          <label for="pco2">pCO₂ (mmHg)</label>
+          <input type="number" id="pco2" step="0.1" value="40.0" readonly>
+          <div class="tooltip">?
+            <span class="tooltip-text">Respiratorischer Parameter.</span>
+          </div>
+        </div>
+        <div class="bga-item" id="item-hco3">
+          <label for="hco3">HCO₃⁻ (mmol/L)</label>
+          <input type="number" id="hco3" step="0.1" value="24.0" readonly>
+          <div class="tooltip">?
+            <span class="tooltip-text">Metabolischer Parameter.</span>
+          </div>
+        </div>
+        <div class="bga-item" id="item-be">
+          <label for="be">BE (mmol/L)</label>
+          <input type="number" id="be" step="0.1" value="0.0" readonly>
+          <div class="tooltip">?
+            <span class="tooltip-text">Base Excess.</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="advanced-values-container" class="hidden">
+        <h3 class="text-base font-semibold text-gray-700 mb-3">Erweiterte Werte</h3>
+        <div class="bga-table">
+          <div class="bga-item" id="item-laktat">
+            <label for="laktat">Laktat (mmol/L)</label>
+            <input type="number" id="laktat" step="0.1" value="1.0" readonly>
+          </div>
+          <div class="bga-item" id="item-na">
+            <label for="na">Na⁺ (mmol/L)</label>
+            <input type="number" id="na" step="1" value="140" readonly>
+          </div>
+          <div class="bga-item" id="item-cl">
+            <label for="cl">Cl⁻ (mmol/L)</label>
+            <input type="number" id="cl" step="1" value="105" readonly>
+          </div>
+          <div class="bga-item" id="item-k">
+            <label for="k">K⁺ (mmol/L)</label>
+            <input type="number" id="k" step="0.1" value="4.0" readonly>
+          </div>
+          <div class="bga-item" id="item-glukose">
+            <label for="glukose">Glukose (mg/dL)</label>
+            <input type="number" id="glukose" step="1" value="100" readonly>
+          </div>
+        </div>
+      </div>
+      
     </div>
-    <div class="mode-switch">
-      <input type="radio" id="mode-basic" name="mode" value="basic" checked>
-      <label for="mode-basic">Basis</label>
-      <input type="radio" id="mode-advanced" name="mode" value="advanced">
-      <label for="mode-advanced">Advanced</label>
+    
+    <details>
+      <summary>Normwerte (Spickzettel)</summary>
+      <div class="content text-sm text-gray-700">
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>pH:</strong> 7.35 – 7.45</li>
+          <li><strong>pCO₂:</strong> 35 – 45 mmHg</li>
+          <li><strong>HCO₃⁻:</strong> 22 – 26 mmol/L</li>
+          <li><strong>BE:</strong> -2 – +2 mmol/L</li>
+          <li><strong>Laktat:</strong> 0.5 – 2.0 mmol/L</li>
+          <li><strong>Na⁺:</strong> 135 – 145 mmol/L</li>
+          <li><strong>Cl⁻:</strong> 98 – 108 mmol/L</li>
+          <li><strong>K⁺:</strong> 3.5 – 5.0 mmol/L</li>
+          <li><strong>Glukose:</strong> 70 – 110 mg/dL</li>
+        </ul>
+        <p class="mt-2 text-xs text-gray-500">Beachte: Normwerte können je nach Labor leicht abweichen.</p>
+      </div>
+    </details>
+
+    <div class="card">
+      <h2 class="text-lg font-semibold text-gray-800 m-0 mb-4">1. Primäre Störung</h2>
+      <fieldset id="primary-fieldset">
+        <ul class="response-list two-col">
+          <li><input type="radio" id="p-normal" name="primary" value="NORMAL"><label for="p-normal">Normal</label></li>
+          <li><input type="radio" id="p-resp-aci" name="primary" value="RESP_ACI"><label for="p-resp-aci">Respiratorische Azidose</label></li>
+          <li><input type="radio" id="p-resp-alk" name="primary" value="RESP_ALK"><label for="p-resp-alk">Respiratorische Alkalose</label></li>
+          <li><input type="radio" id="p-met-aci" name="primary" value="MET_ACI"><label for="p-met-aci">Metabolische Azidose</label></li>
+          <li><input type="radio" id="p-met-alk" name="primary" value="MET_ALK"><label for="p-met-alk">Metabolische Alkalose</label></li>
+          <li id="p-mixed-li" class="hidden"><input type="radio" id="p-mixed" name="primary" value="P_MIXED"><label for="p-mixed">Gemischte Störung</label></li>
+        </ul>
+      </fieldset>
     </div>
+
+    <div class="card">
+      <fieldset id="comp-basic-fieldset" disabled>
+        <legend class="text-lg font-semibold text-gray-800 m-0 mb-4">2. Kompensation (Basis)</legend>
+        <ul class="response-list">
+          <li><input type="radio" id="c-none" name="comp_basic" value="NONE"><label for="c-none">Keine Kompensation</label></li>
+          <li><input type="radio" id="c-partial" name="comp_basic" value="PARTIAL"><label for="c-partial">Teilweise kompensiert</label></li>
+          <li><input type="radio" id="c-full" name="comp_basic" value="FULL"><label for="c-full">Vollständig kompensiert</label></li>
+        </ul>
+      </fieldset>
+      
+      <fieldset id="comp-advanced-fieldset" class="hidden" disabled>
+        <legend class="text-lg font-semibold text-gray-800 m-0 mb-4">2. Kompensations-Analyse (Advanced)</legend>
+        <ul class="response-list two-col">
+          <li><input type="radio" id="ca-none" name="comp_advanced" value="NONE"><label for="ca-none">Keine Kompensation</label></li>
+          <li><input type="radio" id="ca-resp-partial" name="comp_advanced" value="RESP_PARTIAL"><label for="ca-resp-partial">Respiratorische Teil-Komp.</label></li>
+          <li><input type="radio" id="ca-met-partial" name="comp_advanced" value="MET_PARTIAL"><label for="ca-met-partial">Metabolische Teil-Komp.</label></li>
+          <li><input type="radio" id="ca-resp-full" name="comp_advanced" value="RESP_FULL"><label for="ca-resp-full">Respiratorische Voll-Komp.</label></li>
+          <li><input type="radio" id="ca-met-full" name="comp_advanced" value="MET_FULL"><label for="ca-met-full">Metabolische Voll-Komp.</label></li>
+          <li><input type="radio" id="ca-mixed" name="comp_advanced" value="C_MIXED"><label for="ca-mixed">Gemischte Störung</label></li>
+        </ul>
+      </fieldset>
+    </div>
+
+    <div class="card">
+      <details id="explain-wrap" class="mb-4">
+        <summary>
+          <div class="flex items-center">
+            <span id="status-dot" style="display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:8px;background-color:#9ca3af;"></span>
+            <span id="result-text">Bitte Werte auswerten</span>
+          </div>
+        </summary>
+        <div class="content text-sm text-gray-700" id="explanation">
+          Bitte wähle eine primäre Störung und die Kompensation aus.
+        </div>
+      </details>
+      
+      <div id="clinical-explanation-container" class="hidden">
+        <div class="clinical-explanation">
+          <h4>🎓 Klinische Bedeutung</h4>
+          <div id="clinical-explanation-text"></div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-3 mt-4">
+        <button id="evalbutton" class="btn btn-primary flex-1">Auswerten</button>
+        <button id="resetbutton" class="btn btn-secondary">Zurücksetzen</button>
+        <button id="nextcasebutton" class="btn btn-secondary">Nächster Fall</button>
+      </div>
+      
+    </div>
+
   </div>
 
-  <!-- Fallanzeige -->
-  <div class="card">
-    <div class="flex justify-between items-center mb-2">
-      <h2 class="text-sm font-semibold text-gray-800 m-0">
-        Fall #<span id="case-id">1</span>
-        <span id="case-tags" class="text-[0.65rem] font-normal text-gray-500 ml-1"></span>
-      </h2>
-      <p id="case-label" class="text-[0.65rem] text-gray-500 m-0"></p>
-    </div>
-
-    <!-- Grundwerte -->
-    <h3 class="text-xs font-semibold text-gray-700 mb-2">Grundwerte</h3>
-    <div class="bga-table mb-3">
-      <div class="bga-item">
-        <label for="ph">pH</label>
-        <input id="ph" type="number" step="0.01">
-        <div class="tooltip">?
-          <div class="tooltip-text">pH &lt;7.35: Azidose. &gt;7.45: Alkalose.</div>
-        </div>
-      </div>
-      <div class="bga-item">
-        <label for="pco2">pCO₂ (mmHg)</label>
-        <input id="pco2" type="number" step="0.1">
-        <div class="tooltip">?
-          <div class="tooltip-text">Respiratorische Komponente. Norm: 35-45 mmHg.</div>
-        </div>
-      </div>
-      <div class="bga-item">
-        <label for="hco3">HCO₃⁻ (mmol/L)</label>
-        <input id="hco3" type="number" step="0.1">
-        <div class="tooltip">?
-          <div class="tooltip-text">Metabolische Komponente. Norm: 22-26 mmol/L.</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Advanced-Werte -->
-    <div id="advanced-block" class="hidden">
-      <h3 class="text-xs font-semibold text-gray-700 mb-2">Erweiterte Werte</h3>
-      <div class="bga-table mb-2">
-        <div class="bga-item">
-          <label for="be">Base Excess (mmol/L)</label>
-          <input id="be" type="number" step="0.1">
-        </div>
-        <div class="bga-item">
-          <label for="lactate">Laktat (mmol/L)</label>
-          <input id="lactate" type="number" step="0.1">
-        </div>
-        <div class="bga-item">
-          <label for="na">Na⁺ (mmol/L)</label>
-          <input id="na" type="number" step="0.1">
-        </div>
-        <div class="bga-item">
-          <label for="glucose">Glukose (mmol/L)</label>
-          <input id="glucose" type="number" step="0.1">
-        </div>
-      </div>
-    </div>
-
-    <!-- Ergebnis -->
-    <div id="result-box" class="result-box text-gray-700 text-xs mt-2">
-      <strong>Analyse:</strong> Bitte Werte prüfen und auf „Auswerten“ klicken.
-    </div>
-
-    <!-- KI-Prompt-Tools (kostenfrei, manuell mit ChatGPT nutzbar) -->
-    <div class="mt-3">
-      <button id="ki-explain-btn" class="btn btn-gemini w-full mb-1">
-        ✨ Klinische Bedeutung: Prompt erzeugen
-      </button>
-      <textarea id="ki-explain-output" class="prompt-box hidden" rows="5" readonly></textarea>
-
-      <button id="ki-generate-btn" class="btn btn-gemini w-full mt-2 mb-1">
-        ✨ Neuen Fall: Prompt für ChatGPT erzeugen
-      </button>
-      <textarea id="ki-generate-output" class="prompt-box hidden" rows="5" readonly></textarea>
-    </div>
-
-    <!-- Navigationsbuttons -->
-    <div class="flex flex-wrap gap-2 mt-3">
-      <button id="evalbutton" class="btn btn-primary flex-1">Auswerten</button>
-      <button id="resetbutton" class="btn btn-secondary">Zurücksetzen</button>
-      <button id="nextcasebutton" class="btn btn-secondary">Nächster Fall</button>
-    </div>
-  </div>
-
-  <!-- Disclaimer -->
-  <footer class="max-w-3xl mx-auto text-center text-[0.6rem] text-gray-400 mt-4 mb-2">
-    Dieses Tool dient ausschließlich zu Übungs- und Schulungszwecken (Säure-Basen-Training).
-    Keine klinische Entscheidungsgrundlage. Keine Haftung für Inhalte.
+  <footer class="max-w-3xl mx-auto text-center text-xs text-gray-500 mt-8 mb-4 px-4">
+    <p><strong>Wichtiger Hinweis:</strong> Dieses Tool dient ausschließlich zu Übungszwecken.</p>
   </footer>
-</div>
 
-<script>
-  // ===== Datengrundlage: Beispiel-Fälle =====
-  const cases = [
-    {
-      id: 1,
-      mode: "basic",
-      tags: "Akute respiratorische Azidose (COPD-Exazerbation)",
-      ph: 7.25, pco2: 60, hco3: 26,
-      be: null, lactate: null, na: null, glucose: null
-    },
-    {
-      id: 2,
-      mode: "basic",
-      tags: "Metabolische Azidose (z.B. Ketoazidose)",
-      ph: 7.15, pco2: 25, hco3: 9,
-      be: null, lactate: null, na: null, glucose: null
-    },
-    {
-      id: 3,
-      mode: "advanced",
-      tags: "Laktatazidose, Mischbild",
-      ph: 7.10, pco2: 30, hco3: 9,
-      be: -12, lactate: 6.0, na: 150, glucose: 12
-    },
-    {
-      id: 4,
-      mode: "advanced",
-      tags: "Chron. respiratorische Azidose mit kompensierter Metabolik",
-      ph: 7.37, pco2: 65, hco3: 36,
-      be: +8, lactate: 1.5, na: 140, glucose: 6
-    }
-  ];
-
-  let currentMode = "basic";
-  let currentCaseIndex = 0;
-
-  // ===== UI Hilfen =====
-  function updateModeUI() {
-    const chip = document.getElementById("mode-chip");
-    const advBlock = document.getElementById("advanced-block");
-    if (currentMode === "basic") {
-      chip.textContent = "BASIS MODUS";
-      advBlock.classList.add("hidden");
-    } else {
-      chip.textContent = "ADVANCED MODUS";
-      advBlock.classList.remove("hidden");
-    }
-  }
-
-  function loadCase(index) {
-    const c = cases[index];
-    if (!c) return;
-    currentCaseIndex = index;
-    currentMode = c.mode;
-    // Modus-Radio setzen
-    document.getElementById("mode-basic").checked = c.mode === "basic";
-    document.getElementById("mode-advanced").checked = c.mode === "advanced";
-    updateModeUI();
-
-    document.getElementById("case-id").textContent = c.id;
-    document.getElementById("case-tags").textContent = c.tags ? `(${c.tags})` : "";
-    document.getElementById("case-label").textContent =
-      c.mode === "basic" ? "Fokus: pH, pCO₂, HCO₃⁻" : "Fokus: erweitert inkl. BE, Laktat, Na⁺, Glukose";
-
-    // Werte einsetzen
-    document.getElementById("ph").value = c.ph ?? "";
-    document.getElementById("pco2").value = c.pco2 ?? "";
-    document.getElementById("hco3").value = c.hco3 ?? "";
-    document.getElementById("be").value = c.be ?? "";
-    document.getElementById("lactate").value = c.lactate ?? "";
-    document.getElementById("na").value = c.na ?? "";
-    document.getElementById("glucose").value = c.glucose ?? "";
-
-    document.getElementById("result-box").innerHTML =
-      "<strong>Analyse:</strong> Interpretieren und mit „Auswerten“ prüfen.";
-    document.getElementById("ki-explain-output").classList.add("hidden");
-    document.getElementById("ki-generate-output").classList.add("hidden");
-  }
-
-  function getValues() {
-    const v = (id) => {
-      const el = document.getElementById(id);
-      const val = el.value;
-      return val === "" ? null : Number(val);
+  <script>
+    const NORMBEREICHE = {
+      ph: { min: 7.35, max: 7.45 },
+      pco2: { min: 35, max: 45 },
+      hco3: { min: 22, max: 26 },
+      be: { min: -2, max: 2 },
+      laktat: { min: 0.5, max: 2.0 },
+      na: { min: 135, max: 145 },
+      cl: { min: 98, max: 108 },
+      k: { min: 3.5, max: 5.0 },
+      glukose: { min: 70, max: 110 }
     };
-    return {
-      ph: v("ph"),
-      pco2: v("pco2"),
-      hco3: v("hco3"),
-      be: v("be"),
-      lactate: v("lactate"),
-      na: v("na"),
-      glucose: v("glucose")
+
+    const CASES = [
+      {
+        id: 1, mode: 'basic', complexity: 'Basis',
+        context: '68-jähriger Patient mit bekannter COPD, zunehmende Dyspnoe seit 3 Tagen.',
+        ph: 7.28, pco2: 62, hco3: 28, be: 2, laktat: 1.2, na: 140, cl: 104, k: 4.1, glukose: 105,
+        primary: 'RESP_ACI', comp_basic: 'PARTIAL', comp_advanced: 'MET_PARTIAL',
+        explanation: {
+          pathophysiology: 'COPD-Exazerbation führt zu CO2-Retention durch Bronchospasmus.',
+          compensation: 'Nieren resorbieren vermehrt Bikarbonat. Dauert 3-5 Tage.',
+          nursing: 'Atemerleichternde Lagerung, Vigilanz-Monitoring, NIV-Optimierung.'
+        }
+      },
+      {
+        id: 2, mode: 'basic', complexity: 'Basis',
+        context: 'Postoperative Patientin, Opioide zur Schmerztherapie. Atemfrequenz 8/min.',
+        ph: 7.25, pco2: 68, hco3: 24, be: -1, laktat: 1.0, na: 138, cl: 103, k: 3.9, glukose: 98,
+        primary: 'RESP_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Opioide dämpfen das Atemzentrum, führen zu Hypoventilation.',
+          compensation: 'Keine Kompensation bei akutem Ereignis.',
+          nursing: 'SOFORT: Naloxon bereithalten, Atemfrequenz monitoren, O2-Gabe.'
+        }
+      },
+      {
+        id: 3, mode: 'basic', complexity: 'Basis',
+        context: '52-jähriger Patient, BMI 48, chronische Hypoventilation.',
+        ph: 7.36, pco2: 58, hco3: 32, be: 6, laktat: 1.1, na: 141, cl: 102, k: 4.2, glukose: 115,
+        primary: 'RESP_ACI', comp_basic: 'FULL', comp_advanced: 'MET_FULL',
+        explanation: {
+          pathophysiology: 'Extreme Adipositas beeinträchtigt Atemmechanik.',
+          compensation: 'Vollständige metabolische Kompensation, chronischer Zustand.',
+          nursing: 'Schlafapnoe-Screening, NIV-Therapie, Gewichtsreduktion.'
+        }
+      },
+      {
+        id: 4, mode: 'basic', complexity: 'Basis',
+        context: '32-jährige Patientin, Panikattacke mit Kribbeln, Schwindel.',
+        ph: 7.52, pco2: 28, hco3: 23, be: -1, laktat: 0.9, na: 140, cl: 105, k: 4.0, glukose: 98,
+        primary: 'RESP_ALK', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Psychogene Hyperventilation bei Angst, CO2-Abatmung.',
+          compensation: 'Akut, keine Zeit für Kompensation.',
+          nursing: 'Beruhigende Gesprächsführung, Atemübungen. NICHT in Tüte atmen!'
+        }
+      },
+      {
+        id: 5, mode: 'basic', complexity: 'Basis',
+        context: 'Patient nach Appendektomie, starke Schmerzen, schnelle Atmung.',
+        ph: 7.48, pco2: 32, hco3: 24, be: 0, laktat: 1.1, na: 139, cl: 104, k: 4.1, glukose: 110,
+        primary: 'RESP_ALK', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Schmerz führt zu Hyperventilation, CO2-Verlust.',
+          compensation: 'Keine Kompensation, frische Störung.',
+          nursing: 'Schmerztherapie optimieren! Nach Schmerzlinderung normalisiert sich die Atmung.'
+        }
+      },
+      {
+        id: 6, mode: 'basic', complexity: 'Basis',
+        context: '24-jähriger Diabetiker, Erbrechen, Insulin vergessen. BZ 420 mg/dl.',
+        ph: 7.18, pco2: 28, hco3: 10, be: -15, laktat: 2.1, na: 135, cl: 98, k: 5.2, glukose: 420,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Insulinmangel führt zu Ketonkörper-Bildung, starke Azidose.',
+          compensation: 'Kussmaul-Atmung versucht Kompensation.',
+          nursing: 'NOTFALL! Volumengabe, Insulin-Perfusor, Kalium-Substitution, BZ-Kontrollen.'
+        }
+      },
+      {
+        id: 7, mode: 'basic', complexity: 'Basis',
+        context: '72-jährige nach Herzoperation, Urin unter 100ml/24h, Kreatinin 4.8.',
+        ph: 7.28, pco2: 36, hco3: 16, be: -9, laktat: 1.5, na: 138, cl: 108, k: 5.8, glukose: 115,
+        primary: 'MET_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Akutes Nierenversagen, Säuren werden nicht ausgeschieden.',
+          compensation: 'Keine Kompensation, akuter Prozess.',
+          nursing: 'Bilanzierung, Flüssigkeitsrestriktion, EKG-Monitoring wegen Hyperkaliämie, Dialyse vorbereiten.'
+        }
+      },
+      {
+        id: 8, mode: 'basic', complexity: 'Basis',
+        context: '45-jähriger mit Norovirus, über 15 wässrige Durchfälle pro Tag.',
+        ph: 7.30, pco2: 35, hco3: 17, be: -8, laktat: 1.2, na: 136, cl: 112, k: 3.2, glukose: 95,
+        primary: 'MET_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Bikarbonat-Verlust über Darm, hyperchlorämische Azidose.',
+          compensation: 'Noch keine Kompensation.',
+          nursing: 'Volumengabe mit Elektrolytlösungen, Kalium substituieren, Isolierung bei Norovirus.'
+        }
+      },
+      {
+        id: 9, mode: 'advanced', complexity: 'Advanced',
+        context: 'Patient mit kardiogenem Schock, RR 75/50, kaltschweißig.',
+        ph: 7.22, pco2: 32, hco3: 13, be: -12, laktat: 6.8, na: 138, cl: 104, k: 4.8, glukose: 185,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Schock führt zu Gewebehypoxie, anaerober Stoffwechsel, Laktat-Akkumulation.',
+          compensation: 'Teilweise respiratorisch, aber insuffizient.',
+          nursing: 'KRITISCH! Volumengabe, Katecholamine, Laktat-Kontrollen, hämodynamisches Monitoring.'
+        }
+      },
+      {
+        id: 10, mode: 'advanced', complexity: 'Advanced',
+        context: 'Polytrauma, Milzruptur mit Schock, Hypothermie 34 Grad C.',
+        ph: 7.08, pco2: 48, hco3: 14, be: -15, laktat: 9.2, na: 145, cl: 115, k: 5.8, glukose: 185,
+        primary: 'MET_ACI', comp_basic: 'NONE', comp_advanced: 'C_MIXED',
+        explanation: {
+          pathophysiology: 'Letale Trias: Azidose plus Hypothermie plus Koagulopathie. Gemischte Störung.',
+          compensation: 'Keine Kompensation, zusätzliche respiratorische Azidose!',
+          nursing: 'SCHWERSTVERLETZTER! Damage Control Surgery, Massivtransfusion, Wiedererwärmung, permissive Hypotension.'
+        }
+      },
+      {
+        id: 11, mode: 'basic', complexity: 'Basis',
+        context: '24-jährige Patientin mit schwerem Asthma-Anfall, stark dyspnoisch trotz Salbutamol.',
+        ph: 7.22, pco2: 72, hco3: 25, be: -1, laktat: 1.3, na: 139, cl: 105, k: 3.7, glukose: 110,
+        primary: 'RESP_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Beim schweren Asthma-Anfall führt die massive Bronchialobstruktion zur Hypoventilation. Steigt der pCO₂ an, ist dies ein Alarmzeichen für drohende Erschöpfung.',
+          compensation: 'Akute Störung ohne Kompensation. Ein pCO₂ über 60 mmHg bei Asthma bedeutet drohende Atemerschöpfung und kann eine Intubationsindikation darstellen.',
+          nursing: 'NOTFALL! Intensivmonitoring, Intubationsbereitschaft, hochdosierte Kortikosteroide und Bronchodilatatoren, Sauerstoff-Hochfluss, beruhigende Gesprächsführung.'
+        }
+      },
+      {
+        id: 12, mode: 'basic', complexity: 'Basis',
+        context: 'Patient mit ALS, progrediente Atemschwäche, nächtliche Dyspnoe.',
+        ph: 7.33, pco2: 54, hco3: 28, be: 2, laktat: 0.9, na: 140, cl: 103, k: 4.0, glukose: 95,
+        primary: 'RESP_ACI', comp_basic: 'PARTIAL', comp_advanced: 'MET_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei ALS kommt es zur Degeneration der motorischen Neuronen mit progredienter Schwäche der Atemmuskulatur. Die Pumpfunktion der Lunge wird beeinträchtigt.',
+          compensation: 'Teilweise metabolische Kompensation durch renale Bikarbonat-Retention. Dies deutet auf eine bereits länger bestehende Hypoventilation hin.',
+          nursing: 'Regelmäßige Vitalkapazitätsmessungen, Beratung zu NIV-Therapie, Sekretmanagement, Hustenassistenz-Techniken. Frühzeitige Einbindung palliativmedizinischer Versorgung.'
+        }
+      },
+      {
+        id: 13, mode: 'basic', complexity: 'Basis',
+        context: 'Verkehrsunfall mit Rippenserienfraktur rechts, starke atemabhängige Schmerzen.',
+        ph: 7.30, pco2: 56, hco3: 26, be: 0, laktat: 1.8, na: 138, cl: 104, k: 4.3, glukose: 130,
+        primary: 'RESP_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Rippenfrakturen führen zu starken atemabhängigen Schmerzen und damit zur Schonatmung. Zusätzlich kann eine Lungenkontusion die Gasaustauschfläche reduzieren.',
+          compensation: 'Akute Störung ohne Kompensation. Das leicht erhöhte Laktat kann auf eine beginnende Gewebehypoxie oder Stressreaktion hinweisen.',
+          nursing: 'Adäquate Schmerztherapie (Epiduralkatheter erwägen), Atemtherapie mit Anleitung zu effektiver Hustentechnik, Mobilisation unter Schmerzschutz, Pneumonie-Prophylaxe.'
+        }
+      },
+      {
+        id: 14, mode: 'basic', complexity: 'Basis',
+        context: 'Beatmeter Patient auf Intensivstation, Alarm hoher pCO₂. Tidalvolumen zu niedrig.',
+        ph: 7.27, pco2: 65, hco3: 27, be: 1, laktat: 1.1, na: 141, cl: 105, k: 4.0, glukose: 105,
+        primary: 'RESP_ACI', comp_basic: 'PARTIAL', comp_advanced: 'MET_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei unzureichenden Beatmungsparametern wird nicht genug CO₂ abgeatmet. Dies führt zur iatrogenen respiratorischen Azidose.',
+          compensation: 'Beginnende metabolische Kompensation. Bei beatmeten Patienten sollte jedoch primär die Beatmung optimiert werden.',
+          nursing: 'Beatmungsparameter mit Arzt besprechen und anpassen. Ursachen für erhöhten Atemwegswiderstand ausschließen: Tubuslage, Sekret, Bronchospasmus prüfen.'
+        }
+      },
+      {
+        id: 15, mode: 'basic', complexity: 'Basis',
+        context: 'Beatmeter Patient nach Schädel-Hirn-Trauma, Atemfrequenz erhöht wegen ICP.',
+        ph: 7.50, pco2: 30, hco3: 23, be: -1, laktat: 1.0, na: 140, cl: 103, k: 4.0, glukose: 105,
+        primary: 'RESP_ALK', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Bei erhöhtem intrakraniellem Druck wird manchmal therapeutisch eine leichte Hyperventilation eingesetzt. Der niedrige pCO₂ führt zu zerebraler Vasokonstriktion.',
+          compensation: 'Keine Kompensation bei akuter, therapeutisch gewollter Hyperventilation.',
+          nursing: 'Bei SHT-Patienten ist dies teils gewollt, aber engmaschiges ICP-Monitoring erforderlich. Ziel-pCO₂ meist 32 bis 35 mmHg, niemals unter 30 mmHg. Zu starke Hyperventilation kann Hirndurchblutung gefährden.'
+        }
+      },
+      {
+        id: 16, mode: 'basic', complexity: 'Basis',
+        context: 'Bergsteiger in 3500 Meter Höhe, Kopfschmerzen, Übelkeit, Schwindel, schnelle Atmung.',
+        ph: 7.46, pco2: 33, hco3: 23, be: -1, laktat: 1.2, na: 138, cl: 104, k: 4.1, glukose: 95,
+        primary: 'RESP_ALK', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'In großer Höhe ist der Sauerstoffpartialdruck niedriger. Der Körper reagiert mit kompensatorischer Hyperventilation, dabei wird auch mehr CO₂ abgeatmet.',
+          compensation: 'Noch keine Kompensation, da die Höhenexposition erst seit kurzem besteht. Bei längerer Akklimatisation würden die Nieren durch Bikarbonat-Ausscheidung kompensieren.',
+          nursing: 'Bei Höhenkrankheit ist Abstieg die beste Therapie. Symptomatische Behandlung mit Analgetika gegen Kopfschmerzen. Bei Verschlechterung: sofortiger Abstieg lebensnotwendig. Prophylaxe durch langsame Akklimatisation.'
+        }
+      },
+      {
+        id: 17, mode: 'basic', complexity: 'Basis',
+        context: 'Patientin mit Harnwegsinfekt, seit heute Fieber 39 Grad, Tachypnoe 28 pro Minute, verwirrt.',
+        ph: 7.48, pco2: 31, hco3: 23, be: -1, laktat: 2.4, na: 137, cl: 105, k: 4.3, glukose: 145,
+        primary: 'RESP_ALK', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Bei beginnender Sepsis führen Entzündungsmediatoren zu einer Stimulation des Atemzentrums. Dies ist eines der frühen Zeichen einer Sepsis. Das erhöhte Laktat ist wichtiger Hinweis auf systemische Entzündung.',
+          compensation: 'Akute Störung ohne Kompensation. Wichtig: Das erhöhte Laktat deutet darauf hin, dass sich möglicherweise bald auch eine metabolische Azidose entwickeln wird.',
+          nursing: 'SEPSIS-Verdacht gleich NOTFALL! Blutkulturen abnehmen, dann sofort Breitspektrum-Antibiotika innerhalb einer Stunde, Flüssigkeitstherapie nach Protokoll. Engmaschiges Monitoring, qSOFA-Score dokumentieren.'
+        }
+      },
+      {
+        id: 18, mode: 'basic', complexity: 'Basis',
+        context: 'Patient nach Verkehrsunfall, plötzliche Dyspnoe und Thoraxschmerz, frisch operiert vor fünf Tagen.',
+        ph: 7.50, pco2: 29, hco3: 22, be: -2, laktat: 1.8, na: 139, cl: 106, k: 4.0, glukose: 115,
+        primary: 'RESP_ALK', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Bei Lungenembolie führen die plötzliche Dyspnoe und Hypoxie zu reflektorischer Hyperventilation. Zusätzlich werden Irritationsrezeptoren in der Lunge stimuliert. Das leicht erhöhte Laktat kann auf rechtsventrikuläre Belastung hinweisen.',
+          compensation: 'Keine Kompensation bei akutem Ereignis. Die respiratorische Alkalose ist hier ein wichtiger diagnostischer Hinweis bei Verdacht auf Lungenembolie.',
+          nursing: 'Lungenembolie gleich NOTFALL! Sofortige ärztliche Untersuchung, D-Dimer-Bestimmung, CT-Angiographie. Sauerstoff-Gabe, Oberkörperhochlagerung, Antikoagulation nach Anordnung. Thrombose-Prophylaxe-Standards überprüfen.'
+        }
+      },
+      {
+        id: 19, mode: 'basic', complexity: 'Basis',
+        context: 'Dialyse-Patient, letzte Dialyse vor vier Tagen, heute terminliche Dialyse ausgefallen.',
+        ph: 7.32, pco2: 32, hco3: 16, be: -9, laktat: 1.3, na: 140, cl: 106, k: 5.5, glukose: 108,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei chronischer Niereninsuffizienz akkumulieren Stoffwechselsäuren kontinuierlich. Die Dialyse entfernt diese Säuren regelmäßig. Wenn die Dialyse ausfällt, verschlechtert sich die Azidose. Die Hyperkaliämie ist typisch und potenziell lebensbedrohlich.',
+          compensation: 'Teilweise respiratorische Kompensation durch Hyperventilation. Bei chronischen Dialysepatienten ist eine leichte metabolische Azidose oft chronisch vorhanden.',
+          nursing: 'DRINGEND Dialyse organisieren! EKG-Kontrolle wegen Hyperkaliämie. Flüssigkeits- und Kalium-Restriktion bis zur Dialyse. Bei Kalium über sechs oder EKG-Veränderungen: Notfall-Maßnahmen wie Calcium intravenös, Insulin plus Glukose.'
+        }
+      },
+      {
+        id: 20, mode: 'basic', complexity: 'Basis',
+        context: 'Diabetikerin unter Metformin, seit zwei Tagen Durchfall und Erbrechen, zunehmend verwirrt.',
+        ph: 7.20, pco2: 30, hco3: 11, be: -14, laktat: 8.2, na: 137, cl: 105, k: 4.9, glukose: 95,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Metformin hemmt die Glukoneogenese in der Leber. Bei eingeschränkter Nierenfunktion durch Exsikkose führt dies zur Laktat-Akkumulation. Laktat kann nicht mehr zu Glukose umgewandelt werden. Das extrem hohe Laktat und der niedrige Blutzucker sind typisch.',
+          compensation: 'Teilweise respiratorische Kompensation, aber bei so schwerem Laktat-Anstieg insuffizient. Die Verwirrtheit ist Zeichen der schweren Azidose und Gewebehypoxie.',
+          nursing: 'NOTFALL - Intensivstation! Metformin SOFORT absetzen. Volumengabe, Bikarbonat-Pufferung bei pH unter 7.1, bei refraktären Fällen: Dialyse zur Laktat- und Metformin-Elimination. Glukose-Infusion wegen Hypoglykämie-Gefahr.'
+        }
+      },
+      {
+        id: 21, mode: 'basic', complexity: 'Basis',
+        context: 'Junger Mann nach exzessivem Crossfit-Training, extreme Muskelschmerzen, Cola-farbener Urin.',
+        ph: 7.26, pco2: 33, hco3: 14, be: -11, laktat: 3.2, na: 139, cl: 106, k: 5.6, glukose: 110,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei Rhabdomyolyse werden durch Muskelzellzerfall massiv intrazelluläre Substanzen freigesetzt: Myoglobin, Kalium, Phosphat, Purine. Die Hyperurikämie und Phosphat-Freisetzung führen zur metabolischen Azidose. Myoglobin ist nephrotoxisch und kann zu akutem Nierenversagen führen.',
+          compensation: 'Teilweise respiratorische Kompensation durch Hyperventilation. Die Kreatinkinase wäre hier extrem erhöht über zehntausend U pro Liter, diagnostisch wichtig.',
+          nursing: 'Aggressive Volumengabe von sechs bis zwölf Liter pro Tag zur Ausschwemmung von Myoglobin und Nierenschutz. Urin-Alkalisierung mit Natriumbikarbonat erwägen, pH über 6.5 anstreben. Stündliche Urinkontrollen. Hyperkaliämie-Monitoring am EKG. Bei Oligurie trotz Volumengabe: Nierenersatzverfahren.'
+        }
+      },
+      {
+        id: 22, mode: 'basic', complexity: 'Basis',
+        context: 'Patient nach Ingestion von Frostschutzmittel vor sechs Stunden, zunehmend somnolent, Sehstörungen.',
+        ph: 7.15, pco2: 26, hco3: 9, be: -16, laktat: 4.5, na: 138, cl: 98, k: 4.2, glukose: 105,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Ethylenglykol wird in der Leber zu toxischen Metaboliten abgebaut: Glykolsäure, Oxalsäure. Diese verursachen eine schwere metabolische Azidose mit erhöhter Anionenlücke. Die Oxalat-Kristalle schädigen die Nieren. Die Sehstörungen entstehen durch Schädigung des Nervus opticus.',
+          compensation: 'Teilweise respiratorische Kompensation, aber insuffizient bei so schwerer Vergiftung. Die osmotische Lücke ist hier erhöht, wichtiges diagnostisches Kriterium neben der Anionenlücke.',
+          nursing: 'VERGIFTUNGS-NOTFALL! Giftnotruf einschalten. Antidot: Fomepizol hemmt Alkoholdehydrogenase, verhindert toxische Metaboliten, oder alternativ Ethanol-Infusion. Hämodialyse bei schwerer Vergiftung. Volumengabe, Bikarbonat-Pufferung. Thiamin und Pyridoxin geben. Regelmäßige Osmolalität-Kontrollen.'
+        }
+      },
+      {
+        id: 23, mode: 'basic', complexity: 'Basis',
+        context: 'Patient drei Wochen nach Darm-OP mit Ileostoma, Ausscheidung über zwei Liter pro Tag, schwach und schwindelig.',
+        ph: 7.31, pco2: 36, hco3: 18, be: -7, laktat: 1.1, na: 134, cl: 110, k: 3.1, glukose: 92,
+        primary: 'MET_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Bei Ileostoma mit hohem Output gehen große Mengen bikarbonatreicher Flüssigkeit verloren. Der Dickdarm, der normalerweise Wasser und Bikarbonat rückresorbiert, fehlt. Dies führt zur hyperchlorämischen metabolischen Azidose. Die Hypokaliämie und Hyponatriämie entstehen durch die Elektrolytverluste.',
+          compensation: 'Keine respiratorische Kompensation erkennbar. Die Störung entwickelt sich subakut über Tage bis Wochen.',
+          nursing: 'Stomaberatung einschalten! Motilitätshemmer erwägen wie Loperamid. Volumengabe mit balancierten Elektrolytlösungen. Orale Rehydratationslösung, spezielle Stoma-Lösungen. Kalium und Magnesium substituieren. Patienten-Schulung: ausreichend Trinken von zwei bis drei Liter pro Tag, Meiden von stark abführenden Nahrungsmitteln.'
+        }
+      },
+      {
+        id: 24, mode: 'basic', complexity: 'Basis',
+        context: 'Patient mit Pneumonie-Sepsis, Fieber 39.5 Grad, Tachykardie, Hypotonie trotz Volumengabe.',
+        ph: 7.25, pco2: 30, hco3: 13, be: -12, laktat: 5.2, na: 136, cl: 105, k: 4.6, glukose: 175,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei Sepsis führen Entzündungsmediatoren zu Mikrozirkulationsstörungen und Gewebehypoxie. Trotz ausreichender Sauerstoff-Sättigung können die Zellen den Sauerstoff nicht verwerten, sogenannte zytopathische Hypoxie. Dies führt zu anaerober Glykolyse und Laktat-Akkumulation. Das Laktat ist hier Marker für Organdysfunktion und Mortalität. Laktat über vier mmol pro Liter definiert den septischen Schock.',
+          compensation: 'Teilweise respiratorische Kompensation durch septische Hyperventilation. Der niedrige pCO₂ zeigt die Atemantwort auf die Azidose und ist gleichzeitig Zeichen der Sepsis selbst.',
+          nursing: 'SEPSIS gleich NOTFALL! Sepsis-Bundle innerhalb einer Stunde: Blutkulturen, Antibiotika, Volumengabe dreißig ml pro kg, Laktat-Kontrolle. Katecholamine bei persistierender Hypotonie, Noradrenalin ist first-line. Focus-Sanierung hier: Pneumonie-Therapie. Engmaschiges Monitoring, Organfunktionen überwachen. Laktat-Clearance ist wichtiger Verlaufsparameter.'
+        }
+      },
+      {
+        id: 25, mode: 'advanced', complexity: 'Advanced',
+        context: 'Patient mit ausgedehnter Darmresektion, chronische Diarrhoe, neurologische Symptome wie Ataxie, undeutliche Sprache.',
+        ph: 7.28, pco2: 31, hco3: 14, be: -11, laktat: 1.8, na: 137, cl: 106, k: 3.8, glukose: 95,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei Kurzdarmsyndrom entsteht durch bakterielle Fehlbesiedlung D-Laktat im Gegensatz zum normalen L-Laktat. Standard-Laktat-Tests messen nur L-Laktat, daher ist das gemessene Laktat hier normal niedrig trotz schwerer Azidose. D-Laktat ist neurotoxisch und verursacht die charakteristischen neurologischen Symptome. Die erhöhte Anionenlücke trotz normalem Laktat ist der diagnostische Hinweis.',
+          compensation: 'Teilweise respiratorische Kompensation. Diese seltene Form der Azidose wird oft fehldiagnostiziert, weil das Standard-Laktat nicht erhöht ist. Man muss gezielt D-Laktat bestimmen.',
+          nursing: 'Spezialfall! D-Laktat muss speziell angefordert werden, nicht im Standard-Labor. Therapie: Antibiotika gegen bakterielle Fehlbesiedlung, Probiotika, Ernährungsumstellung kohlenhydratarm. Neurologische Symptome bilden sich nach Behandlung meist zurück. Patienten mit Kurzdarmsyndrom benötigen spezialisierte Ernährungsberatung. Cave: diese Patienten sind oft unterernährt und benötigen gegebenenfalls parenterale Ernährung.'
+        }
+      },
+      {
+        id: 26, mode: 'advanced', complexity: 'Advanced',
+        context: 'Diabetiker mit Herzinsuffizienz, nimmt Metformin, jetzt kardiogene Dekompensation mit Ödemen.',
+        ph: 7.19, pco2: 28, hco3: 10, be: -15, laktat: 9.5, na: 132, cl: 98, k: 5.4, glukose: 78,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei kardialer Dekompensation kommt es zur Gewebehypoperfusion. In Kombination mit Metformin, das die mitochondriale Atmung hemmt, entsteht die Metformin-assoziierte Laktatazidose MALA. Die eingeschränkte Nierenfunktion bei Herzinsuffizienz führt zu Metformin-Akkumulation. Das extrem hohe Laktat von 9.5 und die Hypoglykämie trotz Diabetes sind charakteristisch. Die Hyponatriämie ist typisch für dekompensierte Herzinsuffizienz.',
+          compensation: 'Respiratorische Teilkompensation, aber bei so extremer Azidose insuffizient. MALA hat eine hohe Mortalität von dreißig bis fünfzig Prozent.',
+          nursing: 'HÖCHSTE NOTFALLSTUFE! Intensivstation, Metformin sofort stoppen. Herzinsuffizienz-Therapie optimieren mit Diuretika, Katecholamine bei Bedarf. Bikarbonat-Pufferung bei pH unter 7.1. Hämodialyse erwägen, entfernt Metformin und Laktat. Glukose-Infusion wegen Hypoglykämie-Risiko. Cave: Metformin ist bei schwerer Herzinsuffizienz NYHA drei bis vier kontraindiziert, hätte nie gegeben werden dürfen.'
+        }
+      },
+      {
+        id: 27, mode: 'advanced', complexity: 'Advanced',
+        context: 'Beatmeter Patient, seit fünf Tagen Propofol-Dauersedierung, jetzt Bradykardie, grünlicher Urin, Herzrhythmusstörungen.',
+        ph: 7.20, pco2: 35, hco3: 13, be: -12, laktat: 7.8, na: 138, cl: 105, k: 5.9, glukose: 45,
+        primary: 'MET_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Das Propofol-Infusions-Syndrom ist eine seltene, aber lebensbedrohliche Komplikation bei Langzeit-Propofol-Gabe über achtundvierzig Stunden, über vier mg pro kg pro Stunde. Es kommt zu mitochondrialer Dysfunktion mit Laktatazidose, Rhabdomyolyse daher der grüne Urin durch Myoglobin, Herzversagen und Hyperkaliämie. Die Hypoglykämie entsteht durch gestörte Glukoneogenese. Triglyzeride sind massiv erhöht über tausend mg pro dl.',
+          compensation: 'Keine Kompensation bei akutem Organversagen. Die Bradykardie und Arrhythmien sind Zeichen der kardialen Beteiligung. PRIS hat eine Mortalität von dreißig bis achtzig Prozent.',
+          nursing: 'LEBENSBEDROHLICHER NOTFALL! Propofol SOFORT stoppen, auf alternatives Sedativum umstellen wie Midazolam. Intensivtherapie: Volumengabe, Pufferung, bei Herzversagen: Katecholamine, gegebenenfalls ECMO erwägen. Dialyse bei refraktärer Azidose. Triglyzeride, CK, Myoglobin kontrollieren. Cave: bei Kindern und auf Intensivstation besonders aufmerksam sein, PRIS vermeiden durch Dosislimitierung und zeitliche Begrenzung von Propofol.'
+        }
+      },
+      {
+        id: 28, mode: 'advanced', complexity: 'Advanced',
+        context: 'Leukämie-Patient, zweiter Tag nach Chemotherapie-Beginn, Oligurie, Herzrhythmusstörungen.',
+        ph: 7.24, pco2: 30, hco3: 12, be: -13, laktat: 2.1, na: 136, cl: 104, k: 6.8, glukose: 105,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Beim Tumor-Lyse-Syndrom werden durch den massiven Zerfall von Tumorzellen große Mengen intrazellulärer Substanzen freigesetzt: Kalium, Phosphat, Purine. Die Purine werden zu Harnsäure abgebaut, die ausfällt und die Nieren schädigt, akutes Nierenversagen. Die Hyperphosphatämie bindet Calcium, Hypokalzämie mit Tetanie-Risiko. Die metabolische Azidose entsteht durch Nierenversagen und Phosphat-Akkumulation. Die Hyperkaliämie ist extrem gefährlich, Herzstillstand-Risiko.',
+          compensation: 'Teilweise respiratorische Kompensation, aber bei so schwerer Störung insuffizient. Dies ist ein onkologischer Notfall.',
+          nursing: 'ONKOLOGISCHER NOTFALL! Intensivmonitoring mit Tele-EKG wegen Hyperkaliämie. Aggressive Hyperhydratation drei Liter pro m² pro Tag, Urin-Alkalisierung. Rasburicase spaltet Harnsäure. Bei Hyperkaliämie über 6.5: Notfall-Management mit Calcium intravenös, Insulin plus Glukose. Dialyse bei refraktärem Nierenversagen. Phosphatbinder, Calcium-Substitution bei Hypokalzämie. Engmaschige Laborkontrollen alle vier bis sechs Stunden.'
+        }
+      },
+      {
+        id: 29, mode: 'advanced', complexity: 'Advanced',
+        context: 'Patientin mit unbehandelter Hyperthyreose, jetzt Fieber vierzig Grad, Tachykardie hundertsechzig pro Minute, massiv geschwitzt.',
+        ph: 7.51, pco2: 27, hco3: 21, be: -3, laktat: 3.2, na: 148, cl: 110, k: 3.0, glukose: 165,
+        primary: 'RESP_ALK', comp_basic: 'NONE', comp_advanced: 'MET_PARTIAL',
+        explanation: {
+          pathophysiology: 'Die thyreotoxische Krise ist ein lebensbedrohlicher Notfall. Der massive Überschuss an Schilddrüsenhormonen führt zu extremer Stoffwechselsteigerung mit Hyperventilation. Die Hypernatriämie von einhundertachtundvierzig und Hypokaliämie von drei entstehen durch Schwitzen und gesteigerte Diurese. Das erhöhte Laktat zeigt die metabolische Entgleisung.',
+          compensation: 'Beginnende metabolische Kompensation durch renale Bikarbonat-Ausscheidung, HCO₃⁻ und BE leicht erniedrigt. Aber: Die Situation ist zu akut für vollständige Kompensation. Das Laktat deutet zusätzlich auf eine beginnende metabolische Azidose hin.',
+          nursing: 'NOTFALL - Intensivstation! Thyreostatika hochdosiert, Betablocker Cave: keine Kontraindikationen, Cortison, Flüssigkeit und Elektrolyte. Kühlung keine Eisbäder. Monitoring von Temperatur, Herzfrequenz, Blutdruck. Die Hypokaliämie muss dringend korrigiert werden, Arrhythmie-Gefahr bei Tachykardie. Mortalität ohne Behandlung bis dreißig Prozent.'
+        }
+      },
+      {
+        id: 30, mode: 'advanced', complexity: 'Advanced',
+        context: 'Schwangere in sechsunddreißigster SSW, leichte Luftnot beim Treppensteigen, ansonsten beschwerdefrei.',
+        ph: 7.44, pco2: 32, hco3: 21, be: -3, laktat: 1.0, na: 136, cl: 104, k: 3.8, glukose: 88,
+        primary: 'RESP_ALK', comp_basic: 'PARTIAL', comp_advanced: 'MET_PARTIAL',
+        explanation: {
+          pathophysiology: 'In der Schwangerschaft führt das Hormon Progesteron zu einer gesteigerten Atemantwort. Zusätzlich drückt der wachsende Uterus das Zwerchfell nach oben, was die funktionelle Residualkapazität reduziert. Der Körper kompensiert mit erhöhter Atemfrequenz. Dies ist eine physiologische Anpassung an die Schwangerschaft.',
+          compensation: 'Teilweise metabolische Kompensation durch die Nieren. Dies zeigt, dass die Hyperventilation schon länger besteht. Diese BGA-Veränderungen sind für das dritte Trimenon normal und stellen keine Krankheit dar.',
+          nursing: 'Schwangere über die physiologischen Veränderungen aufklären, dies ist normal. Atemübungen können helfen, mit der Dyspnoe besser umzugehen. Eisenstatus prüfen, Anämie kann Dyspnoe verstärken. Bei starker Verschlechterung oder zusätzlichen Symptomen wie Brustschmerz, starke Ödeme: an Präeklampsie oder Lungenembolie denken.'
+        }
+      }
+    ];
+
+    let currentIndex = 0;
+    let currentMode = 'basic';
+
+    const inputs = {
+      ph: document.getElementById('ph'),
+      pco2: document.getElementById('pco2'),
+      hco3: document.getElementById('hco3'),
+      be: document.getElementById('be'),
+      laktat: document.getElementById('laktat'),
+      na: document.getElementById('na'),
+      cl: document.getElementById('cl'),
+      k: document.getElementById('k'),
+      glukose: document.getElementById('glukose')
     };
-  }
 
-  // ===== Lokale BGA-Analyse (vereinfachte Logik) =====
-  function evaluateCase() {
-    const { ph, pco2, hco3 } = getValues();
-    const box = document.getElementById("result-box");
+    const advancedContainer = document.getElementById('advanced-values-container');
+    const primaryFieldset = document.getElementById('primary-fieldset');
+    const compBasicFieldset = document.getElementById('comp-basic-fieldset');
+    const compAdvancedFieldset = document.getElementById('comp-advanced-fieldset');
+    const pMixedLi = document.getElementById('p-mixed-li');
+    const modeChip = document.getElementById('mode-chip');
+    const explainWrap = document.getElementById('explain-wrap');
+    const clinicalExplanationContainer = document.getElementById('clinical-explanation-container');
+    const clinicalExplanationText = document.getElementById('clinical-explanation-text');
 
-    if (ph == null || pco2 == null || hco3 == null) {
-      box.innerHTML = "<strong>Analyse:</strong> Bitte mindestens pH, pCO₂ und HCO₃⁻ ausfüllen.";
-      return;
+    function setAmpelColor(key, value) {
+      const item = document.getElementById('item-' + key);
+      if (!item) return;
+      item.classList.remove('norm-green', 'norm-red', 'norm-blue');
+      const norm = NORMBEREICHE[key];
+      if (!norm) return;
+      if (value >= norm.min && value <= norm.max) {
+        item.classList.add('norm-green');
+      } else if (key === 'ph' || key === 'pco2' || key === 'be' || key === 'laktat') {
+        item.classList.add('norm-red');
+      } else {
+        item.classList.add('norm-blue');
+      }
     }
 
-    let interpretation = [];
-
-    if (ph < 7.35) {
-      if (pco2 > 45 && hco3 >= 22) {
-        interpretation.push("Primär respiratorische Azidose (CO₂-Retention).");
-      } else if (hco3 < 22 && pco2 <= 45) {
-        interpretation.push("Primär metabolische Azidose.");
-      } else {
-        interpretation.push("Mischbild / unklare Azidose. Kompensation prüfen.");
+    function getRandomCase() {
+      let available = CASES;
+      if (currentMode === 'basic') {
+        available = CASES.filter(c => c.mode === 'basic');
+      } else if (currentMode === 'advanced') {
+        available = CASES.filter(c => c.mode === 'advanced');
       }
-    } else if (ph > 7.45) {
-      if (pco2 < 35 && hco3 <= 26) {
-        interpretation.push("Primär respiratorische Alkalose.");
-      } else if (hco3 > 26 && pco2 >= 35) {
-        interpretation.push("Primär metabolische Alkalose.");
-      } else {
-        interpretation.push("Mischbild / unklare Alkalose. Kompensation prüfen.");
-      }
-    } else {
-      interpretation.push("pH im Normbereich: kompensierter Zustand oder Normalbefund.");
+      const filtered = available.filter((c, idx) => CASES.indexOf(c) !== currentIndex);
+      if (filtered.length === 0) return Math.floor(Math.random() * available.length);
+      const randomCase = filtered[Math.floor(Math.random() * filtered.length)];
+      return CASES.indexOf(randomCase);
     }
 
-    box.innerHTML =
-      "<strong>Analyse (vereinfachtes Training):</strong><br>" +
-      interpretation.map(line => "- " + line).join("<br>");
-  }
+    function renderCase(index) {
+      if (index === -1) index = getRandomCase();
+      const c = CASES[index];
+      if (!c) return;
+      currentIndex = index;
+      
+      for (const key in inputs) {
+        if (inputs[key] && c[key] != null) {
+          inputs[key].value = c[key].toFixed(key === 'ph' ? 2 : 1);
+          setAmpelColor(key, c[key]);
+        }
+      }
 
-  function nextCase() {
-    const nextIndex = (currentCaseIndex + 1) % cases.length;
-    loadCase(nextIndex);
-  }
+      document.getElementById('case-id').textContent = c.id;
+      document.getElementById('case-complexity').textContent = c.complexity;
+      document.getElementById('case-complexity').className = 'text-xs px-2 py-1 rounded-full ' + 
+        (c.complexity === 'Basis' ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800');
+      document.getElementById('clinical-context').textContent = c.context;
 
-  function resetCase() {
-    loadCase(currentCaseIndex);
-  }
+      primaryFieldset.querySelectorAll('input').forEach(r => r.checked = false);
+      compBasicFieldset.querySelectorAll('input').forEach(r => r.checked = false);
+      compAdvancedFieldset.querySelectorAll('input').forEach(r => r.checked = false);
+      compBasicFieldset.disabled = true;
+      compAdvancedFieldset.disabled = true;
 
-  // ===== KI-PROMPT (manuell mit ChatGPT nutzen) =====
-  function buildExplainPrompt() {
-    const { ph, pco2, hco3, be, lactate, na, glucose } = getValues();
-    const textarea = document.getElementById("ki-explain-output");
+      explainWrap.open = false;
+      document.getElementById('status-dot').style.backgroundColor = '#9ca3af';
+      document.getElementById('result-text').textContent = 'Bitte Werte auswerten';
+      document.getElementById('explanation').textContent = 'Bitte wähle primäre Störung und Kompensation.';
+      clinicalExplanationContainer.classList.add('hidden');
+    }
 
-    const parts = [];
-    if (ph != null) parts.push(`pH: ${ph}`);
-    if (pco2 != null) parts.push(`pCO₂: ${pco2} mmHg`);
-    if (hco3 != null) parts.push(`HCO₃⁻: ${hco3} mmol/L`);
-    if (be != null) parts.push(`Base Excess: ${be} mmol/L`);
-    if (lactate != null) parts.push(`Laktat: ${lactate} mmol/L`);
-    if (na != null) parts.push(`Na⁺: ${na} mmol/L`);
-    if (glucose != null) parts.push(`Glukose: ${glucose} mmol/L`);
+    function handleModeChange() {
+      const newMode = document.querySelector('input[name="mode"]:checked').value;
+      currentMode = newMode;
+      
+      if (currentMode === 'basic') {
+        modeChip.textContent = 'BASIS MODUS';
+        advancedContainer.classList.add('hidden');
+        compBasicFieldset.style.display = 'block';
+        compAdvancedFieldset.style.display = 'none';
+        pMixedLi.classList.add('hidden');
+      } else if (currentMode === 'advanced') {
+        modeChip.textContent = 'ADVANCED MODUS';
+        advancedContainer.classList.remove('hidden');
+        compBasicFieldset.style.display = 'none';
+        compAdvancedFieldset.style.display = 'block';
+        pMixedLi.classList.remove('hidden');
+      } else {
+        modeChip.textContent = 'MIXED MODUS';
+        advancedContainer.classList.remove('hidden');
+        compBasicFieldset.style.display = 'none';
+        compAdvancedFieldset.style.display = 'block';
+        pMixedLi.classList.remove('hidden');
+      }
+    }
 
-    const valuesLine = parts.join(", ");
+    function handlePrimarySelection() {
+      const primary = document.querySelector('input[name="primary"]:checked');
+      if (!primary) {
+        compBasicFieldset.disabled = true;
+        compAdvancedFieldset.disabled = true;
+        return;
+      }
+      if (primary.value === 'NORMAL') {
+        compBasicFieldset.disabled = true;
+        compAdvancedFieldset.disabled = true;
+        document.getElementById('c-none').checked = true;
+        document.getElementById('ca-none').checked = true;
+      } else {
+        if (currentMode === 'basic') {
+          compBasicFieldset.disabled = false;
+        } else {
+          compAdvancedFieldset.disabled = false;
+        }
+      }
+    }
 
-    const prompt =
-`Du bist Tutor für Intensivpflege / Beatmung.
-Analysiere folgenden BGA-Fall nach einem strukturierten 4-Schritte-Schema:
-1) Liegt eine Azidose oder Alkalose vor? (pH)
-2) Primäre Störung: respiratorisch vs. metabolisch?
-3) Korrekte Kompensation? (vereinfachte Regeln)
-4) Plausible klinische Ursachen und nächste pflegerische/therapeutische Schritte.
+    function getLabel(key) {
+      const labels = {
+        NORMAL: 'Normal', RESP_ACI: 'Respiratorische Azidose', RESP_ALK: 'Respiratorische Alkalose',
+        MET_ACI: 'Metabolische Azidose', MET_ALK: 'Metabolische Alkalose', P_MIXED: 'Gemischte Störung',
+        NONE: 'Keine Kompensation', PARTIAL: 'Teilweise Kompensation', FULL: 'Vollständige Kompensation',
+        RESP_PARTIAL: 'Respiratorische Teil-Kompensation', MET_PARTIAL: 'Metabolische Teil-Kompensation',
+        RESP_FULL: 'Respiratorische Voll-Kompensation', MET_FULL: 'Metabolische Voll-Kompensation',
+        C_MIXED: 'Gemischte Störung'
+      };
+      return labels[key] || key;
+    }
 
-Fall:
-${valuesLine}
+    document.querySelectorAll('input[name="mode"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        handleModeChange();
+        renderCase(-1);
+      });
+    });
 
-Antworte prägnant, didaktisch klar, auf Deutsch, ohne Latex.`;
+    primaryFieldset.addEventListener('change', handlePrimarySelection);
 
-    textarea.value = prompt;
-    textarea.classList.remove("hidden");
-  }
+    document.getElementById('evalbutton').addEventListener('click', () => {
+      const c = CASES[currentIndex];
+      const primaryEl = document.querySelector('input[name="primary"]:checked');
+      const compKey = currentMode === 'basic' ? 'comp_basic' : 'comp_advanced';
+      const compEl = document.querySelector('input[name="' + compKey + '"]:checked');
+      
+      if (!primaryEl || !compEl) {
+        alert('Bitte wähle beide Optionen aus!');
+        return;
+      }
 
-  function buildGeneratePrompt() {
-    const mode = currentMode;
-    const textarea = document.getElementById("ki-generate-output");
+      const isCorrect = (primaryEl.value === c.primary && compEl.value === c[compKey]);
+      document.getElementById('status-dot').style.backgroundColor = isCorrect ? '#16a34a' : '#ef4444';
+      document.getElementById('result-text').textContent = isCorrect ? 'Korrekt ✓' : 'Nicht korrekt ✗';
+      document.getElementById('explanation').innerHTML = 
+        '<p><strong>Richtige Antwort:</strong> ' + getLabel(c.primary) + ', ' + getLabel(c[compKey]) + '</p>';
+      explainWrap.open = true;
 
-    const prompt =
-`Erzeuge einen neuen, klinisch plausiblen BGA-Trainingsfall für Pflegefachpersonen.
-
-Vorgaben:
-- Modus: ${mode === "basic" ? "Basis (nur pH, pCO₂, HCO₃⁻, optional kurze Klinik)" : "Advanced (inkl. BE, Laktat, Na⁺, Glukose, Mischbilder möglich)"}.
-- Liefere:
-  - Werte (pH, pCO₂ [mmHg], HCO₃⁻ [mmol/L], ggf. BE, Laktat, Na⁺, Glukose)
-  - Primäre Störung
-  - Kompensationsstatus
-  - 2–3 Stichworte zur klinischen Situation
-- Antworte in sauberem, kompaktem Format, das ich direkt in ein BGA-Übungstool übernehmen kann.
-- Sprache: Deutsch.`;
-
-    textarea.value = prompt;
-    textarea.classList.remove("hidden");
-  }
-
-  // ===== Events binden =====
-  document.addEventListener("DOMContentLoaded", () => {
-    // Modus-Umschalter
-    document.getElementById("mode-basic").addEventListener("change", (e) => {
-      if (e.target.checked) {
-        currentMode = "basic";
-        updateModeUI();
+      if (c.explanation) {
+        clinicalExplanationText.innerHTML = 
+          '<p class="mb-2"><strong>Pathophysiologie:</strong><br>' + c.explanation.pathophysiology + '</p>' +
+          '<p class="mb-2"><strong>Kompensation:</strong><br>' + c.explanation.compensation + '</p>' +
+          '<p><strong>Pflegerisch:</strong><br>' + c.explanation.nursing + '</p>';
+        clinicalExplanationContainer.classList.remove('hidden');
       }
     });
-    document.getElementById("mode-advanced").addEventListener("change", (e) => {
-      if (e.target.checked) {
-        currentMode = "advanced";
-        updateModeUI();
-      }
+
+    document.getElementById('nextcasebutton').addEventListener('click', () => {
+      renderCase(-1);
     });
 
-    // Buttons
-    document.getElementById("evalbutton").addEventListener("click", evaluateCase);
-    document.getElementById("resetbutton").addEventListener("click", resetCase);
-    document.getElementById("nextcasebutton").addEventListener("click", nextCase);
-    document.getElementById("ki-explain-btn").addEventListener("click", buildExplainPrompt);
-    document.getElementById("ki-generate-btn").addEventListener("click", buildGeneratePrompt);
+    document.getElementById('resetbutton').addEventListener('click', () => {
+      renderCase(currentIndex);
+    });
 
-    // Start mit erstem Fall
-    loadCase(0);
-  });
-</script>
+    window.onload = () => {
+      handleModeChange();
+      renderCase(-1);
+    };
+  </script>
+
 </body>
 </html>
