@@ -903,35 +903,30 @@ ph,pco2,hco3,be,laktat,na,cl,k,glukose,primary,comp_basic,comp_advanced,tags,not
     /**
      * Ruft die Gemini-API auf (unsicher im Frontend, nur für Demo).
      */
-    async function callGeminiAPI(prompt, isJsonMode = false) {
-      // WICHTIG: In einer echten Anwendung MUSS dies über einen sicheren Proxy/Backend laufen,
-      // um den API-Schlüssel nicht preiszugeben.
-      const apiKey = ""; // HIER API-KEY EINFÜGEN (ODER LEER LASSEN FÜR CANVAS-UMGEBUNG)
-      const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+    
+/* --- callOpenAI: frontend proxy caller to /api/openai --- */
+async function callOpenAI(prompt, options = {}) {
+  const model = options.model || "gpt-4o-mini";
+  const max_tokens = options.max_tokens || 500;
+  const temperature = (typeof options.temperature !== "undefined") ? options.temperature : 0.1;
+  try {
+    const resp = await fetch("/api/openai", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model, prompt, max_tokens, temperature })
+    });
+    if (!resp.ok) {
+      const err = await resp.json().catch(()=>({error: 'unknown'}));
+      throw new Error("Proxy error: " + (err.error || resp.status));
+    }
+    const j = await resp.json();
+    return j.text || (j.raw && JSON.stringify(j.raw)) || "";
+  } catch (e) {
+    console.error("callOpenAI error", e);
+    return "Fehler bei der KI-Anfrage: " + e.message;
+  }
+}
 
-      const payload = {
-        contents: [{ parts: [{ text: prompt }] }],
-      };
-      
-      if (isJsonMode) {
-          payload.generationConfig = {
-              responseMimeType: "application/json",
-              responseSchema: {
-                  type: "OBJECT",
-                  properties: {
-                      ph: { type: "NUMBER" },
-                      pco2: { type: "NUMBER" },
-                      hco3: { type: "NUMBER" },
-                      be: { type: "NUMBER" },
-                      laktat: { type: "NUMBER" },
-                      na: { type: "NUMBER" },
-                      cl: { type: "NUMBER" },
-                      k: { type: "NUMBER" },
-                      glukose: { type: "NUMBER" },
-                      primary: { type: "STRING" },
-                      comp_basic: { type: "STRING" },
-                      comp_advanced: { type: "STRING" },
-                      tags: { type: "STRING" }
                   }
               }
           };
