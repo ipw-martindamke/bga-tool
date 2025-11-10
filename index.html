@@ -422,7 +422,7 @@
 
   <footer class="max-w-3xl mx-auto text-center text-xs text-gray-500 mt-8 mb-4 px-4">
     <p><strong>Wichtiger Hinweis (Haftungsausschluss):</strong><br>
-	Dieses Tool dient ausschließlich zu Übungs- und Schulungszwecken. Die dargestellten Fälle, Werte und Erklärungen sind nicht zur Stellung medizinischer Diagnosen oder als Ersatz für professionellen medizinischen Rat, eine Diagnose oder eine Behandlung gedacht. Die Nutzung erfolgt auf eigene Gefahr. Es wird keine Haftung für die Richtigkeit oder Vollständigkeit der Inhalte übernommen.</p>
+    Dieses Tool dient ausschließlich zu Übungs- und Schulungszwecken. Die dargestellten Fälle, Werte und Erklärungen sind nicht zur Stellung medizinischer Diagnosen oder als Ersatz für professionellen medizinischen Rat, eine Diagnose oder eine Behandlung gedacht. Die Nutzung erfolgt auf eigene Gefahr. Es wird keine Haftung für die Richtigkeit oder Vollständigkeit der Inhalte übernommen.</p>
   </footer>
 
   <script>
@@ -767,6 +767,336 @@
           pathophysiology: 'In der Schwangerschaft führt das Hormon Progesteron zu einer gesteigerten Atemantwort. Zusätzlich drückt der wachsende Uterus das Zwerchfell nach oben, was die funktionelle Residualkapazität reduziert. Der Körper kompensiert mit erhöhter Atemfrequenz. Dies ist eine physiologische Anpassung an die Schwangerschaft.',
           compensation: 'Teilweise metabolische Kompensation durch die Nieren. Dies zeigt, dass die Hyperventilation schon länger besteht. Diese BGA-Veränderungen sind für das dritte Trimenon normal und stellen keine Krankheit dar.',
           nursing: 'Schwangere über die physiologischen Veränderungen aufklären, dies ist normal. Atemübungen können helfen, mit der Dyspnoe besser umzugehen. Eisenstatus prüfen, Anämie kann Dyspnoe verstärken. Bei starker Verschlechterung oder zusätzlichen Symptomen wie Brustschmerz, starke Ödeme: an Präeklampsie oder Lungenembolie denken.'
+        }
+      },
+      {
+        id: 31, mode: 'basic', complexity: 'Basis',
+        context: 'Patientin mit unstillbarem Erbrechen seit drei Tagen, Gastroenteritis, kann nichts bei sich behalten.',
+        ph: 7.52, pco2: 45, hco3: 36, be: 10, laktat: 1.0, na: 138, cl: 92, k: 2.8, glukose: 95,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei anhaltendem Erbrechen geht Magensäure verloren, die reich an Salzsäure ist. Der Körper verliert also Wasserstoff-Ionen und Chlorid. Dies führt zur metabolischen Alkalose. Die Hypokaliämie entsteht durch renale Verluste, da die Niere bei Alkalose vermehrt Kalium ausscheidet. Die Hypochlorämie ist charakteristisch für diese Form der Alkalose.',
+          compensation: 'Teilweise respiratorische Kompensation durch Hypoventilation. Der Körper versucht, durch verminderte Atmung CO₂ zurückzuhalten und so den pH zu senken. Der pCO₂ ist leicht erhöht.',
+          nursing: 'Volumengabe mit NaCl 0.9 Prozent zur Korrektur der Chlorid-Depletion. Kalium-Substitution ist essentiell, aber Vorsicht: nur bei ausreichender Diurese geben. Antiemetika zur Unterbrechung des Erbrechens. Cave: Die Hypokaliämie kann zu Herzrhythmusstörungen führen, EKG-Kontrolle empfohlen.'
+        }
+      },
+      {
+        id: 32, mode: 'basic', complexity: 'Basis',
+        context: 'Patient auf Intensivstation, Magensonde läuft seit fünf Tagen auf Sog, große Mengen Magensekret.',
+        ph: 7.50, pco2: 44, hco3: 34, be: 8, laktat: 0.9, na: 140, cl: 94, k: 3.0, glukose: 105,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Wenn eine Magensonde kontinuierlich Magensekret absaugt, geht wie beim Erbrechen Salzsäure verloren. Pro Liter Magensaft gehen etwa 100 mmol Chlorid und entsprechend Wasserstoff-Ionen verloren. Dies ist eine iatrogene metabolische Alkalose.',
+          compensation: 'Teilweise respiratorische Kompensation durch leichte Hypoventilation. Bei beatmeten Patienten kann diese Kompensation durch die Beatmungseinstellung begrenzt sein.',
+          nursing: 'Magensonden-Management überprüfen: Ist die kontinuierliche Absaugung wirklich notwendig oder kann auf intermittierende Absaugung umgestellt werden? Chlorid- und Kalium-Substitution. Protonenpumpeninhibitoren reduzieren die Magensäureproduktion. Bei schwerer Alkalose: H2-Blocker oder PPI erwägen.'
+        }
+      },
+      {
+        id: 33, mode: 'basic', complexity: 'Basis',
+        context: 'Herzinsuffizienz-Patientin unter Furosemid-Hochdosis-Therapie, heute sehr schwach, Muskelkrämpfe.',
+        ph: 7.48, pco2: 43, hco3: 32, be: 6, laktat: 1.1, na: 136, cl: 96, k: 2.6, glukose: 110,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Schleifendiuretika wie Furosemid führen zu einem massiven Verlust von Chlorid und Kalium über die Niere. Der Chlorid-Verlust ist der primäre Mechanismus der metabolischen Alkalose. Zusätzlich aktiviert die Volumenkontraktion das Renin-Angiotensin-Aldosteron-System, was die Alkalose weiter verstärkt. Die Hypokaliämie ist bei Diuretika-Therapie besonders gefährlich.',
+          compensation: 'Teilweise respiratorische Kompensation. Die Muskelkrämpfe entstehen durch die Hypokaliämie und die alkalosebedingte Verschiebung von ionisiertem Calcium.',
+          nursing: 'Diuretika-Dosis mit Arzt besprechen, eventuell reduzieren oder Kalium-sparende Diuretika ergänzen wie Spironolacton. Aggressive Kalium-Substitution, Ziel-Kalium über 4.0 mmol pro Liter. Magnesium kontrollieren und substituieren, Magnesiummangel verhindert Kalium-Aufnahme in die Zellen. EKG-Monitoring wegen Arrhythmie-Risiko bei Hypokaliämie.'
+        }
+      },
+      {
+        id: 34, mode: 'basic', complexity: 'Basis',
+        context: 'Patient mit Hyperaldosteronismus, Hypertonie therapierefraktär, Muskelschwäche, häufiges Wasserlassen.',
+        ph: 7.46, pco2: 42, hco3: 30, be: 5, laktat: 0.8, na: 144, cl: 98, k: 2.4, glukose: 100,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei Hyperaldosteronismus produziert die Nebenniere übermäßig Aldosteron. Dies führt zu vermehrter Natrium-Rückresorption und Kalium-Ausscheidung in der Niere. Parallel werden Wasserstoff-Ionen ausgeschieden, was zur metabolischen Alkalose führt. Die schwere Hypokaliämie unter 2.5 ist typisch und kann zu Lähmungen führen.',
+          compensation: 'Teilweise respiratorische Kompensation. Die Muskelschwäche entsteht durch die ausgeprägte Hypokaliämie.',
+          nursing: 'Aldosteron-Antagonist wie Spironolacton ist die kausale Therapie. Großzügige Kalium-Substitution, oft sind sehr hohe Dosen nötig. Blutdruck-Monitoring. Bei schwerer Hypokaliämie unter 2.5: kontinuierliche Kalium-Infusion über Perfusor erwägen, nie als Bolus geben. EKG-Monitoring obligat. Nach Diagnosestellung eventuell operative Therapie bei Nebennieren-Adenom.'
+        }
+      },
+      {
+        id: 35, mode: 'basic', complexity: 'Basis',
+        context: 'Patient nach massiver Bluttransfusion, zehn Erythrozytenkonzentrate in drei Stunden, jetzt Kribbeln in Händen.',
+        ph: 7.46, pco2: 41, hco3: 29, be: 4, laktat: 1.2, na: 139, cl: 100, k: 3.8, glukose: 105,
+        primary: 'MET_ALK', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Erythrozytenkonzentrate enthalten Citrat als Antikoagulans. Bei massiver Transfusion wird viel Citrat infundiert, das in der Leber zu Bikarbonat verstoffwechselt wird. Dies führt zur metabolischen Alkalose. Das Kribbeln entsteht, weil Citrat Calcium bindet und eine Hypokalzämie verursacht, verstärkt durch die Alkalose.',
+          compensation: 'Keine Kompensation erkennbar bei akutem Ereignis. Diese Form der Alkalose ist selbstlimitierend und bessert sich nach Beendigung der Transfusion.',
+          nursing: 'Calcium-Substitution bei symptomatischer Hypokalzämie, Calcium-Gluconat langsam intravenös. Bei Massivtransfusion: prophylaktische Calcium-Gabe erwägen. Gerinnungsmonitoring, da Citrat auch die Gerinnung beeinflusst. Diese Form der Alkalose ist meist mild und bedarf keiner spezifischen Therapie außer Calcium-Substitution.'
+        }
+      },
+      {
+        id: 36, mode: 'advanced', complexity: 'Advanced',
+        context: 'Intensivpatient, mechanisch beatmet, wurde für Bronchoskopie stark hyperventiliert, danach Bikarbonat-Gabe.',
+        ph: 7.58, pco2: 38, hco3: 35, be: 10, laktat: 1.0, na: 142, cl: 96, k: 3.4, glukose: 115,
+        primary: 'MET_ALK', comp_basic: 'NONE', comp_advanced: 'C_MIXED',
+        explanation: {
+          pathophysiology: 'Dies ist eine iatrogene gemischte Alkalose. Bei der Bronchoskopie wurde der Patient hyperventiliert, was zu respiratorischer Alkalose führte. Wenn dann zusätzlich Bikarbonat gegeben wurde, entsteht eine additive Störung. Beide Komponenten treiben den pH nach oben. Der pCO₂ hat sich nach der Bronchoskopie normalisiert, aber das Bikarbonat ist massiv erhöht. Dies ist eine der schwersten Formen der Alkalose.',
+          compensation: 'Keine Kompensation möglich, da beide Systeme in die gleiche Richtung verschoben sind. Eine gemischte Alkalose ist selten, aber kann bei iatrogenen Ursachen auftreten. Der pH über 7.55 ist gefährlich.',
+          nursing: 'Beatmung anpassen, keine weitere Hyperventilation. Keine weiteren Bikarbonat-Gaben. Chlorid-reiche Infusionen geben wie NaCl 0.9 Prozent. Bei pH über 7.6: Acetazolamid erwägen, hemmt renale Bikarbonat-Rückresorption. Kalium überwachen und substituieren. Monitoring auf Krampfanfälle bei schwerer Alkalose, da diese die zerebrale Durchblutung reduziert.'
+        }
+      },
+      {
+        id: 37, mode: 'advanced', complexity: 'Advanced',
+        context: 'Patient mit Cushing-Syndrom, stammbetonte Adipositas, Vollmondgesicht, seit Wochen Muskelschwäche.',
+        ph: 7.47, pco2: 42, hco3: 30, be: 5, laktat: 0.9, na: 146, cl: 98, k: 2.5, glukose: 185,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Beim Cushing-Syndrom ist zu viel Cortisol im Körper. Cortisol hat eine schwache mineralocorticoide Wirkung, ähnlich wie Aldosteron. Dies führt zu Natrium-Retention, Kalium-Ausscheidung und Wasserstoff-Ionen-Verlust über die Niere. Die Hyperglykämie entsteht durch die diabetogene Wirkung von Cortisol. Die Hypernatriämie ist typisch.',
+          compensation: 'Teilweise respiratorische Kompensation. Die Muskelschwäche ist multifaktoriell: Hypokaliämie, Myopathie durch Cortisol-Überschuss, und die katabole Wirkung von Cortisol auf die Muskulatur.',
+          nursing: 'Behandlung der Grunderkrankung durch Endokrinologie. Kalium-Substitution. Blutdruck-Monitoring, da Hypertonie typisch ist. Blutzucker-Kontrollen, oft entwickelt sich ein Steroid-Diabetes. Hautpflege besonders wichtig, da Cortisol die Haut ausdünnt und Wundheilung verschlechtert. Thromboseprophylaxe, Cushing erhöht Thrombose-Risiko.'
+        }
+      },
+      {
+        id: 38, mode: 'advanced', complexity: 'Advanced',
+        context: 'Neugeborenes, zweiter Lebenstag, erbricht gallig, geblähtes Abdomen, Verdacht auf Pylorusstenose.',
+        ph: 7.54, pco2: 44, hco3: 37, be: 11, laktat: 1.5, na: 136, cl: 88, k: 3.2, glukose: 75,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Die hypertrophe Pylorusstenose ist eine Verengung des Magenausgangs beim Säugling. Das Kind erbricht nach jeder Mahlzeit im Schwall, verliert dabei Magensäure. Dies führt zur klassischen hypochlorämischen hypokalämischen metabolischen Alkalose. Die Hypochlorämie ist besonders ausgeprägt. Das galliges Erbrechen deutet auf eine Obstruktion hin.',
+          compensation: 'Teilweise respiratorische Kompensation. Bei Säuglingen ist die Kompensationsfähigkeit noch eingeschränkt.',
+          nursing: 'KINDERCHIRURGISCHER NOTFALL! Magensonde legen, aber nicht absaugen. Volumengabe mit NaCl 0.9 Prozent und Kalium nach Kontrolle. Präoperative Stabilisierung obligat, nie mit schwerer Alkalose operieren. Glukose-haltige Infusionen wegen Hypoglykämie-Risiko. Eltern-Aufklärung und Begleitung. Nach Korrektur der Elektrolyte: Pyloromyotomie. Prognose nach OP exzellent.'
+        }
+      },
+      {
+        id: 39, mode: 'advanced', complexity: 'Advanced',
+        context: 'Bulimie-Patientin, gibt zu, mehrfach täglich zu erbrechen und Laxantien zu missbrauchen.',
+        ph: 7.50, pco2: 43, hco3: 33, be: 8, laktat: 1.0, na: 138, cl: 92, k: 2.6, glukose: 85,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei Bulimie mit selbstinduziertem Erbrechen entsteht die gleiche metabolische Alkalose wie bei anderen Formen des Erbrechens. Der chronische Verlust von Magensäure und Chlorid führt zur anhaltenden Alkalose. Die Hypokaliämie ist besonders gefährlich und kann zu lebensbedrohlichen Herzrhythmusstörungen führen. Zusätzlicher Laxantien-Missbrauch kann paradoxerweise auch zu Elektrolytverlusten führen.',
+          compensation: 'Teilweise respiratorische Kompensation. Die psychiatrische Grunderkrankung muss behandelt werden, sonst rezidiviert die Störung ständig.',
+          nursing: 'Einfühlsame psychiatrische Betreuung ist essentiell. Elektrolyt-Substitution, besonders Kalium und Magnesium. EKG-Monitoring bei schwerer Hypokaliämie. Zahnärztliche Kontrolle empfehlen, da Magensäure die Zähne schädigt. Ernährungsberatung einbeziehen. Langfristig: psychotherapeutische Behandlung der Essstörung. Cave: Bei schwerer Hypokaliämie unter 2.5 stationäre Aufnahme erwägen.'
+        }
+      },
+      {
+        id: 40, mode: 'advanced', complexity: 'Advanced',
+        context: 'Patient mit chronischer Niereninsuffizienz, bekommt seit Wochen hochdosiert Natriumbikarbonat oral.',
+        ph: 7.49, pco2: 44, hco3: 33, be: 8, laktat: 1.1, na: 142, cl: 98, k: 4.2, glukose: 105,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei chronischer Niereninsuffizienz wird oft Bikarbonat gegeben, um die chronische metabolische Azidose zu behandeln. Wenn die Dosis zu hoch ist oder die Nierenfunktion sich unerwartet verbessert, kann eine iatrogene metabolische Alkalose entstehen. Dies ist ein klassisches Beispiel für eine Übertherapie.',
+          compensation: 'Teilweise respiratorische Kompensation durch Hypoventilation. Bei Patienten mit eingeschränkter Lungenfunktion kann diese Kompensation problematisch sein.',
+          nursing: 'Bikarbonat-Dosis reduzieren oder pausieren. Nierenfunktion kontrollieren, möglicherweise hat sich die GFR verbessert. Elektrolyte überwachen. Bei dialysepflichtigen Patienten: Dialysat-Bikarbonat-Konzentration anpassen. Diese Form der Alkalose ist gut therapierbar durch Dosisanpassung. Langfristig: Ziel-Bikarbonat bei CKD ist 22 bis 24 mmol pro Liter, nicht höher.'
+        }
+      },
+      {
+        id: 41, mode: 'basic', complexity: 'Basis',
+        context: 'Gesunder junger Patient zur Referenzmessung vor elektiver Operation, keine Vorerkrankungen.',
+        ph: 7.40, pco2: 40, hco3: 24, be: 0, laktat: 1.0, na: 140, cl: 104, k: 4.0, glukose: 95,
+        primary: 'NORMAL', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Dies ist eine normale BGA ohne pathologische Veränderungen. Alle Parameter liegen im Referenzbereich. Der Säure-Basen-Haushalt ist perfekt ausgeglichen, die Lunge arbeitet effizient, die Nieren kompensieren adäquat. Dies dient als Referenzwert zum Vergleich mit pathologischen Befunden.',
+          compensation: 'Keine Kompensation notwendig, da keine Störung vorliegt. Der pH-Wert liegt exakt in der Mitte des Normbereichs bei 7.40. Sowohl respiratorische als auch metabolische Parameter sind optimal.',
+          nursing: 'Pflegerelevant: Bei normalen BGA-Werten keine spezifischen Maßnahmen erforderlich. Wichtig ist zu lernen, normale Werte sicher zu erkennen und nicht zu überinterpretieren. Nicht jede kleine Abweichung ist klinisch relevant. Der gesunde Körper reguliert den Säure-Basen-Haushalt eigenständig perfekt.'
+        }
+      },
+      {
+        id: 42, mode: 'advanced', complexity: 'Advanced',
+        context: 'Intensivpatient mit Pneumonie-Sepsis und gleichzeitiger Hypoventilation durch starke Sedierung.',
+        ph: 7.10, pco2: 60, hco3: 18, be: -10, laktat: 4.0, na: 130, cl: 95, k: 5.8, glukose: 160,
+        primary: 'P_MIXED', comp_basic: 'NONE', comp_advanced: 'C_MIXED',
+        explanation: {
+          pathophysiology: 'Dies ist eine lebensbedrohliche kombinierte Azidose mit beiden Komponenten gleichzeitig gestört. Die respiratorische Azidose entsteht durch Hypoventilation bei zu tiefer Sedierung oder Atemwegsverlegung. Die metabolische Azidose kommt von der Sepsis mit Gewebehypoxie und Laktatbildung. Beide Störungen addieren sich und treiben den pH dramatisch in den kritischen Bereich unter 7.1.',
+          compensation: 'Keine Kompensation möglich, da beide Regulationssysteme versagen. Die Lunge kann die metabolische Azidose nicht kompensieren, weil sie selbst das Problem ist. Die Niere ist durch die Sepsis in ihrer Funktion eingeschränkt. Dies ist ein medizinischer Notfall mit hoher Mortalität.',
+          nursing: 'Pflegerelevant: HÖCHSTE NOTFALLSTUFE! Sofortige Eskalation an Intensivteam. Atemweg sichern, Beatmung optimieren oder einleiten. Sedierung reduzieren. Sepsis-Therapie intensivieren mit Antibiotika, Volumengabe, Katecholamine. Bei pH unter 7.1 ist die Herzfunktion massiv beeinträchtigt, Katecholamine wirken schlechter. Engmaschiges Monitoring aller Vitalparameter. Bikarbonat-Pufferung erwägen, aber primär Ursachen beheben!'
+        }
+      },
+      {
+        id: 43, mode: 'advanced', complexity: 'Advanced',
+        context: 'Patient mit Infekt, beginnende Sepsis, Tachypnoe 32 pro Minute, leichte Hypotonie, Laktat steigend.',
+        ph: 7.50, pco2: 28, hco3: 22, be: 0, laktat: 3.5, na: 134, cl: 100, k: 3.4, glukose: 110,
+        primary: 'RESP_ALK', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Bei beginnender Sepsis ist die respiratorische Alkalose oft ein Frühwarnzeichen, noch bevor die metabolische Azidose manifest wird. Entzündungsmediatoren stimulieren das Atemzentrum und führen zu Hyperventilation. Das erhöhte Laktat von 3.5 zeigt bereits die beginnende Gewebehypoxie, aber das Bikarbonat ist noch normal. Dies ist das Fenster, in dem schnelles Handeln die Eskalation zur schweren Sepsis verhindern kann.',
+          compensation: 'Noch keine Kompensation, die Störung ist akut. Wichtig: In den nächsten Stunden wird sich wahrscheinlich eine metabolische Azidose entwickeln, wenn die Sepsis fortschreitet. Das Laktat ist der wichtigste Verlaufsparameter.',
+          nursing: 'Pflegerelevant: Sepsis-Frühwarnung ernst nehmen! Sofortige Vitalparameter-Kontrolle, qSOFA-Score erheben. Blutkulturen abnehmen, dann Antibiotika nach Protokoll. Volumengabe starten. Laktat-Kontrollen alle zwei Stunden. Engmaschiges Monitoring von Blutdruck, Herzfrequenz, Atemfrequenz, Temperatur, Bewusstsein. Bei Verschlechterung: Intensivstation. Das Zeitfenster für erfolgreiche Therapie ist klein!'
+        }
+      },
+      {
+        id: 44, mode: 'advanced', complexity: 'Advanced',
+        context: 'Patient mit schwerer Herzinsuffizienz und Bewusstseinstrübung, Lungenödem im Röntgen, zusätzlich Fieber.',
+        ph: 7.05, pco2: 70, hco3: 20, be: -8, laktat: 3.0, na: 142, cl: 102, k: 5.0, glukose: 150,
+        primary: 'P_MIXED', comp_basic: 'NONE', comp_advanced: 'C_MIXED',
+        explanation: {
+          pathophysiology: 'Dies ist eine dramatische Kombination aus kardiogenem Lungenödem mit CO₂-Retention und beginnender septischer Komponente. Das Lungenödem behindert den Gasaustausch massiv, CO₂ wird nicht mehr abgeatmet. Gleichzeitig führt die kardiale Minderperfusion plus mögliche Infektion zur metabolischen Azidose. Der pH von 7.05 ist kritisch und mit dem Leben kaum vereinbar.',
+          compensation: 'Keine Kompensation, beide Systeme sind dekompensiert. Der Patient steht an der Schwelle zum Multiorganversagen. Die Bewusstseinstrübung ist Folge der schweren Azidose und der zerebralen Minderperfusion.',
+          nursing: 'Pflegerelevant: AKUT LEBENSBEDROHLICH! Reanimationsbereitschaft herstellen. Notfall-Intubation und Beatmung vorbereiten. Diuretika-Hochdosis zur Ödem-Ausschwemmung. Katecholamine zur Kreislaufstabilisierung. Antibiotika bei Infektzeichen. Dieser Patient braucht sofortige intensivmedizinische Maximaltherapie. Familie informieren über kritische Situation. Bei pH unter 7.1 ist die Prognose sehr schlecht, jede Minute zählt.'
+        }
+      },
+      {
+        id: 45, mode: 'advanced', complexity: 'Advanced',
+        context: 'Patient mit neuromuskulärer Erkrankung wie ALS, seit Jahren an invasiver Heimbeatmung, zur Routinekontrolle.',
+        ph: 7.40, pco2: 55, hco3: 33, be: 8, laktat: 1.0, na: 139, cl: 98, k: 4.0, glukose: 105,
+        primary: 'RESP_ACI', comp_basic: 'FULL', comp_advanced: 'MET_FULL',
+        explanation: {
+          pathophysiology: 'Bei Patienten mit chronischer neuromuskulärer Erkrankung und Langzeitbeatmung entwickelt sich oft ein individuelles Ziel-pCO₂, das höher liegt als bei Gesunden. Die Atemmuskulatur ist durch die Grunderkrankung so schwach, dass eine Normalisierung des pCO₂ nicht möglich ist. Der Körper hat sich über Monate an dieses höhere CO₂-Level angepasst.',
+          compensation: 'Vollständige metabolische Kompensation über die Nieren. Das erhöhte Bikarbonat gleicht die respiratorische Azidose komplett aus, der pH ist wieder normal. Dies ist der neue Steady State für diesen Patienten. Eine Absenkung des pCO₂ durch aggressivere Beatmung würde zu einer metabolischen Alkalose führen.',
+          nursing: 'Pflegerelevant: Bei chronisch beatmeten Patienten ist das individuelle Ziel-pCO₂ zu akzeptieren. Nicht jedes erhöhte pCO₂ muss normalisiert werden. Wichtig: Kontrolle der Beatmungseinstellungen, Cuff-Druck prüfen, Sekretmanagement. Verlaufsbeobachtung wichtiger als Einzelwerte. Bei stabiler Situation keine Panik, der Patient ist gut kompensiert. Schulung der Familie über normale Werte ihres Angehörigen.'
+        }
+      },
+      {
+        id: 46, mode: 'advanced', complexity: 'Advanced',
+        context: 'Tracheotomierter Patient mit plötzlichem Fieber, starke Sekretproduktion, zunehmend unruhig, SpO₂ fällt ab.',
+        ph: 7.20, pco2: 80, hco3: 36, be: 10, laktat: 1.5, na: 138, cl: 95, k: 5.0, glukose: 140,
+        primary: 'RESP_ACI', comp_basic: 'PARTIAL', comp_advanced: 'MET_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei tracheotomierten Patienten kann ein Sekretstau innerhalb von Minuten zu kritischer Atemwegsverlegung führen. Das zähe Sekret bei Fieber und Infektion verlegt die Trachealkanüle oder die unteren Atemwege. Das CO₂ steigt dramatisch an. Dies ist eine akute Verschlechterung bei einem Patienten, der zuvor chronisch kompensiert war. Das hohe pCO₂ von 80 mmHg ist lebensbedrohlich.',
+          compensation: 'Das hohe Bikarbonat zeigt die chronische Vorgeschichte, aber die aktuelle Azidose mit pH 7.20 zeigt die akute Dekompensation. Die bestehende Kompensation reicht nicht mehr aus.',
+          nursing: 'Pflegerelevant: NOTFALL bei Trachealkanüle! Sofortige Intervention erforderlich. Endotracheales Absaugen, eventuell Trachealkanüle wechseln wenn verlegt. Sauerstoff-Gabe erhöhen. Lagerung optimieren. Inhalation mit NaCl zur Sekretolyse. Antibiotika bei Infektzeichen. Bei Verschlechterung: Notarzt rufen. Dies ist ein Klassiker in der außerklinischen Intensivpflege - schnelles Erkennen rettet Leben!'
+        }
+      },
+      {
+        id: 47, mode: 'advanced', complexity: 'Advanced',
+        context: 'Beatmeter Patient mit bekannter Trachealkanüle, nun hypotone Kreislaufsituation, Oligurie, Fieber.',
+        ph: 7.15, pco2: 45, hco3: 16, be: -10, laktat: 7.5, na: 135, cl: 90, k: 5.5, glukose: 300,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Dies ist eine schwere metabolische Azidose mit sehr hohem Laktat von 7.5, was auf septischen Schock hindeutet. Die erhöhte Anionenlücke durch Laktat ist charakteristisch. Die Hyperglykämie entsteht durch Stress und Insulinresistenz bei Sepsis. Die Hyperkaliämie kommt durch die Azidose und beginnende Nierenfunktionsstörung. Der Patient ist vital bedroht.',
+          compensation: 'Teilweise respiratorische Kompensation, aber insuffizient bei so hohem Laktat. Das pCO₂ ist im oberen Normbereich statt niedrig, was darauf hindeutet, dass die Atemreserve erschöpft ist.',
+          nursing: 'Pflegerelevant: SEPTISCHER SCHOCK! Sofortige Eskalation. Sepsis-Bundle: Blutkulturen, Antibiotika innerhalb einer Stunde, aggressive Volumengabe 30 ml pro kg. Noradrenalin bei persistierender Hypotonie. Fokus-Sanierung, wahrscheinlich Pneumonie bei beatmetem Patienten. Laktat-Kontrollen alle 2 Stunden als Verlaufsparameter. Blutzucker-Management. Hyperkaliämie-Monitoring am EKG. Bei Laktat über 4 ist die Mortalität sehr hoch.'
+        }
+      },
+      {
+        id: 48, mode: 'basic', complexity: 'Basis',
+        context: 'Beatmungspatient, seit heute Morgen zunehmend unruhig, Alarm wegen Hyperventilation, SpO₂ 100 Prozent.',
+        ph: 7.55, pco2: 30, hco3: 24, be: 0, laktat: 1.0, na: 142, cl: 100, k: 4.2, glukose: 100,
+        primary: 'RESP_ALK', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Dies ist eine iatrogene respiratorische Alkalose durch fehlerhafte Beatmungseinstellung. Das Atemzugvolumen ist zu hoch oder die Atemfrequenz zu hoch eingestellt, sodass zu viel CO₂ abgeatmet wird. Die Unruhe des Patienten kann durch die Alkalose selbst verursacht sein, aber auch Auslöser für gehäuftes Triggern der Beatmung sein. Eine Überbeatmung ist potenziell gefährlich.',
+          compensation: 'Keine Kompensation bei akuter Störung. Das Bikarbonat ist noch normal, da die Nieren Zeit brauchen um zu reagieren.',
+          nursing: 'Pflegerelevant: Beatmungseinstellungen SOFORT überprüfen und korrigieren. Atemzugvolumen oder Frequenz reduzieren. Ursache der Unruhe abklären: Schmerzen, Angst, volle Blase, Lagerung unbequem. Sedierung nur als letzte Option, erst alle anderen Ursachen ausschließen. Eine chronische Überbeatmung kann später zu Apnoen führen, wenn der Patient an niedrige CO₂-Werte gewöhnt ist. Ziel: normales pCO₂ anstreben.'
+        }
+      },
+      {
+        id: 49, mode: 'advanced', complexity: 'Advanced',
+        context: 'Langzeitbeatmeter Patient mit Herzinsuffizienz, erhält hochdosierte Schleifendiuretika seit Wochen.',
+        ph: 7.47, pco2: 35, hco3: 28, be: 4, laktat: 1.0, na: 145, cl: 100, k: 3.0, glukose: 95,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Schleifendiuretika wie Furosemid führen bei Langzeitgabe zu einem massiven Verlust von Chlorid und Kalium über die Niere. Dies ist eine kontraktions-alkalose durch Volumenmangel. Der Chlorid-Verlust ist der Hauptmechanismus. Die chronische Diuretika-Therapie bei beatmeten Patienten mit Herzinsuffizienz ist eine häufige Ursache für metabolische Alkalose in der Langzeitpflege.',
+          compensation: 'Teilweise respiratorische Kompensation durch leichte Hypoventilation. Bei beatmeten Patienten ist diese Kompensation durch die Beatmungseinstellung limitiert.',
+          nursing: 'Pflegerelevant: Diuretika-Dosis mit Arzt besprechen, eventuell reduzieren oder Kalium-sparende Diuretika ergänzen. Aggressive Kalium-Substitution notwendig, Ziel über 4.0 mmol pro Liter. Chlorid-Gabe erwägen als NaCl-Infusion. Magnesium kontrollieren und substituieren. Bei beatmeten Patienten: Beatmungseinstellung eventuell anpassen. Flüssigkeitsbilanz führen. EKG-Monitoring bei Hypokaliämie obligat.'
+        }
+      },
+      {
+        id: 50, mode: 'advanced', complexity: 'Advanced',
+        context: 'COPD-Patient mit Cor pulmonale, periphere Ödeme, Halsvenen gestaut, zunehmende Belastungsdyspnoe.',
+        ph: 7.32, pco2: 58, hco3: 30, be: 4, laktat: 1.6, na: 132, cl: 98, k: 3.2, glukose: 118,
+        primary: 'RESP_ACI', comp_basic: 'PARTIAL', comp_advanced: 'MET_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei langjähriger COPD führt chronische Hypoxie zur pulmonalen Hypertonie und Rechtsherzbelastung, dem sogenannten Cor pulmonale. Die Herzinsuffizienz verschlechtert die Lungenfunktion zusätzlich. Die Hyponatriämie und Hypokaliämie sind typisch bei Herzinsuffizienz mit Diuretika-Therapie. Dies ist ein Teufelskreis aus Lungen- und Herzerkrankung.',
+          compensation: 'Metabolische Teilkompensation. Auffällig: Hyponatriämie von 132 und Hypokaliämie von 3.2, typisch bei Herzinsuffizienz mit Diuretika. Die Elektrolytstörungen können Arrhythmien begünstigen.',
+          nursing: 'Pflegerelevant: Sorgfältige Bilanzierung, Cave Überwässerung. Diuretika nach Plan, aber Elektrolytsubstitution nicht vergessen, besonders Kalium. Oberkörperhochlagerung. Bei Verschlechterung: NIV plus Herzinsuffizienz-Therapie optimieren. Gewichtskontrolle täglich. Beinödeme dokumentieren. Sauerstoff-Gabe vorsichtig dosieren, Ziel SpO₂ 88 bis 92 Prozent bei COPD. EKG-Monitoring bei Elektrolytstörungen.'
+        }
+      },
+      {
+        id: 51, mode: 'basic', complexity: 'Basis',
+        context: 'Heimbeatmeter Patient, Angehörige berichtet über zunehmende Tagesmüdigkeit und morgendliche Kopfschmerzen.',
+        ph: 7.34, pco2: 56, hco3: 30, be: 4, laktat: 1.1, na: 140, cl: 103, k: 4.0, glukose: 105,
+        primary: 'RESP_ACI', comp_basic: 'PARTIAL', comp_advanced: 'MET_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei heimbeatmeten Patienten kann eine schleichende Unterventilation entstehen, wenn die Beatmungseinstellungen nicht mehr optimal sind. Mögliche Ursachen sind Gewichtszunahme, Krankheitsprogression, Leckagen am Interface oder technische Probleme der Beatmungsmaschine. Die morgendlichen Kopfschmerzen sind ein typisches Zeichen für nächtliche CO₂-Retention, die sogenannte CO₂-Narkose-Symptomatik.',
+          compensation: 'Teilweise metabolische Kompensation durch die Nieren, erkennbar am erhöhten Bikarbonat. Dies zeigt, dass die Unterventilation schon seit Tagen bis Wochen besteht, nicht erst seit heute. Der Körper versucht zu kompensieren, aber es reicht nicht mehr aus.',
+          nursing: 'Pflegerelevant: Beatmungsgerät überprüfen auf Funktion und Einstellungen. Masken-Sitz kontrollieren, Leckagen ausschließen. Befeuchtungssystem prüfen. Atemzugvolumen oder Beatmungsdruck eventuell erhöhen nach Rücksprache mit Arzt oder Beatmungstherapeut. Download der Gerätedaten zur Auswertung. Bei Verschlechterung: Pneumologen oder Beatmungszentrum kontaktieren. Schulung der Familie über Warnzeichen.'
+        }
+      },
+      {
+        id: 52, mode: 'basic', complexity: 'Basis',
+        context: 'Patient mit Tracheostoma in häuslicher Pflege, seit gestern vermehrtes gelblich-grünes Trachealsekret, Fieber 38.2°C.',
+        ph: 7.29, pco2: 54, hco3: 26, be: 0, laktat: 1.8, na: 138, cl: 104, k: 4.3, glukose: 135,
+        primary: 'RESP_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Bei tracheotomierten Patienten ist das Risiko für Atemwegsinfektionen erhöht, da die natürlichen Abwehrmechanismen der oberen Atemwege umgangen werden. Das purulente Sekret und Fieber deuten auf eine bakterielle Tracheobronchitis oder beginnende Pneumonie hin. Die Infektion führt zu Bronchospasmus, Sekretverlegung und damit zu Hypoventilation mit CO₂-Retention.',
+          compensation: 'Keine Kompensation bei akutem Infektgeschehen. Das leicht erhöhte Laktat deutet auf eine beginnende systemische Entzündungsreaktion hin.',
+          nursing: 'Pflegerelevant: Sekretabnahme für Mikrobiologie vor Antibiotika-Gabe. Intensivierung der Inhalationstherapie mit NaCl und eventuell Bronchodilatatoren. Endotracheales Absaugen nach Bedarf, aber nicht zu häufig um Schleimhautreizung zu vermeiden. Antibiotika nach ärztlicher Anordnung. Fiebersenkung. Flüssigkeitszufuhr erhöhen zur Sekretverflüssigung. Oberkörperhochlagerung. Bei Verschlechterung mit steigendem pCO₂ oder Bewusstseinstrübung: Klinikeinweisung erwägen.'
+        }
+      },
+      {
+        id: 53, mode: 'basic', complexity: 'Basis',
+        context: 'Heimbeatmeter ALS-Patient, Angehörige hat aus Versehen das Atemzugvolumen erhöht, Patient klagt über Schwindel.',
+        ph: 7.49, pco2: 32, hco3: 24, be: 0, laktat: 0.9, na: 141, cl: 105, k: 3.9, glukose: 98,
+        primary: 'RESP_ALK', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Bei versehentlich erhöhtem Atemzugvolumen wird der Patient überbeatmet. Es wird mehr CO₂ abgeatmet als produziert, was zur akuten respiratorischen Alkalose führt. Der Schwindel entsteht durch zerebrale Vasokonstriktion bei niedrigem CO₂, was die Hirndurchblutung reduziert. Dies ist ein häufiger iatrogener Fehler in der häuslichen Beatmung.',
+          compensation: 'Keine Kompensation bei akutem Ereignis. Das Bikarbonat ist noch im Normbereich.',
+          nursing: 'Pflegerelevant: Beatmungseinstellungen SOFORT auf die Ausgangswerte zurücksetzen. Dokumentation der korrekten Einstellungen für die Familie sichtbar anbringen. Einweisung der Angehörigen wiederholen, wie wichtig korrekte Einstellungen sind. Kindersicherung am Beatmungsgerät aktivieren falls möglich. Dieser Fall zeigt, wie wichtig regelmäßige Schulungen der pflegenden Angehörigen sind. Bei persistierenden Symptomen nach Korrektur: telefonische Rücksprache mit Beatmungszentrum.'
+        }
+      },
+      {
+        id: 54, mode: 'advanced', complexity: 'Advanced',
+        context: 'Langzeitbeatmeter Patient, seit Wochen kaum Flüssigkeitsaufnahme wegen Schluckstörung, zunehmend verwirrt.',
+        ph: 7.48, pco2: 42, hco3: 31, be: 6, laktat: 1.2, na: 152, cl: 110, k: 3.3, glukose: 125,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei unzureichender Flüssigkeitszufuhr entsteht eine Dehydratation mit Hypernatriämie von 152. Die Kontraktionsalkalose durch Volumenmangel führt zur metabolischen Alkalose. Die Nieren scheiden bei Volumenmangel weniger Bikarbonat aus um Natrium zu sparen, was die Alkalose verstärkt. Die Hyperchlorämie und Hypokaliämie sind typisch. Die Verwirrtheit ist Folge der Hypernatriämie und Dehydratation, besonders gefährlich bei älteren Patienten.',
+          compensation: 'Teilweise respiratorische Kompensation durch leichte Hypoventilation. Bei beatmeten Patienten ist diese Kompensation limitiert.',
+          nursing: 'Pflegerelevant: Flüssigkeitsbilanz führen und Flüssigkeitszufuhr drastisch erhöhen, ideal über PEG-Sonde falls vorhanden, sonst vorsichtige orale Flüssigkeitsgabe oder intravenöse Rehydratation erwägen. Vorsicht bei zu schneller Korrektur der Hypernatriämie, maximal 10 mmol pro Liter pro Tag senken um osmotisches Demyelinisierungssyndrom zu vermeiden. Elektrolyt-Substitution besonders Kalium. Hautpflege intensivieren bei Dehydratation. Schulung der Familie über ausreichende Flüssigkeitszufuhr, eventuell PEG-Anlage besprechen bei persistierender Dysphagie.'
+        }
+      },
+      {
+        id: 55, mode: 'advanced', complexity: 'Advanced',
+        context: 'Heimbeatmeter Patient mit Aspirationspneumonie, antibiotisch anbehandelt, jetzt zunehmend dyspnoisch trotz Sauerstoff.',
+        ph: 7.32, pco2: 48, hco3: 24, be: -1, laktat: 2.8, na: 136, cl: 102, k: 4.5, glukose: 165,
+        primary: 'RESP_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Die Aspirationspneumonie bei beatmeten Patienten ist eine gefürchtete Komplikation. Aspirierter Mageninhalt schädigt die Lunge chemisch und bakteriell. Trotz Antibiotika-Therapie verschlechtert sich die Lungenfunktion, die Inflammation reduziert die Compliance. Das erhöhte Laktat von 2.8 deutet auf eine zunehmende Hypoxie und beginnende Sepsis hin. Die Hyperglykämie ist Stressreaktion.',
+          compensation: 'Keine metabolische Kompensation bei akutem Geschehen. Das pCO₂ steigt trotz vermehrter Atemanstrengung, was ein schlechtes Zeichen ist und auf respiratorische Erschöpfung hindeutet.',
+          nursing: 'Pflegerelevant: DRINGEND ärztliche Evaluation, eventuell Klinikeinweisung notwendig. Röntgen-Thorax zum Ausschluss von Komplikationen wie Pleuraerguss oder ARDS. Antibiotika-Therapie evaluieren, eventuell Eskalation. Beatmungsunterstützung intensivieren, höherer Beatmungsdruck oder Frequenz. Aspirationsprophylaxe überprüfen: Oberkörperhochlagerung mindestens 30 Grad, Cuff-Druck kontrollieren, Nahrungszufuhr über PEG optimieren, Magensonde auf richtige Lage prüfen. Bei weiter steigendem Laktat: septischer Schock, Intensivstation erforderlich.'
+        }
+      },
+      {
+        id: 56, mode: 'basic', complexity: 'Basis',
+        context: 'Patient mit neuer Heimbeatmung, erste Woche zu Hause, klagt über Bauchschmerzen und Völlegefühl nach Mahlzeiten.',
+        ph: 7.51, pco2: 46, hco3: 36, be: 10, laktat: 0.9, na: 139, cl: 95, k: 3.2, glukose: 100,
+        primary: 'MET_ALK', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei Beatmungspatienten kann es zu Aerophagie kommen, dem Verschlucken von Luft, besonders bei nicht-invasiver Beatmung mit Maske. Die verschluckte Luft führt zu Magenüberblähung und reflexartig zu Erbrechen oder Aufstoßen. Wenn saurer Mageninhalt verloren geht, entsteht eine metabolische Alkalose. Die Hypokaliämie und Hypochlorämie sind typisch. Die Bauchschmerzen entstehen durch die Überdehnung des Magens.',
+          compensation: 'Teilweise respiratorische Kompensation durch Hypoventilation, erkennbar am etwas erhöhten pCO₂.',
+          nursing: 'Pflegerelevant: Beatmungsmaske überprüfen auf korrekten Sitz und Druck, eventuell auf andere Maskengröße oder Maskentyp wechseln. Kleinere, häufigere Mahlzeiten statt großer Portionen. Langsam essen lassen, gut kauen. Oberkörperhochlagerung nach Mahlzeiten. Medikamente zur Reduktion der Magensäureproduktion erwägen. Kalium-Substitution. Bei persistierenden Beschwerden: PEG-Anlage diskutieren um orale Nahrungsaufnahme zu vermeiden. Dies ist ein häufiges Problem in der Anpassungsphase an die Heimbeatmung.'
+        }
+      },
+      {
+        id: 57, mode: 'advanced', complexity: 'Advanced',
+        context: 'Beatmungspatient unter Langzeit-Cortisontherapie wegen COPD, seit drei Tagen Halsschmerzen, jetzt Luftnot und Fieber.',
+        ph: 7.24, pco2: 62, hco3: 26, be: 0, laktat: 3.2, na: 144, cl: 108, k: 5.1, glukose: 285,
+        primary: 'RESP_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Patienten unter Langzeit-Cortison-Therapie sind immunsupprimiert und haben ein erhöhtes Infektionsrisiko. Die Halsschmerzen waren wahrscheinlich erstes Zeichen einer Infektion, die sich jetzt zur schweren Tracheobronchitis oder Pneumonie entwickelt hat. Die Hyperglykämie entsteht durch die Cortison-Therapie plus Stress der Infektion. Das erhöhte Laktat deutet auf beginnende Sepsis hin. Die CO₂-Retention zeigt die schwere Atemwegsverlegung.',
+          compensation: 'Keine Kompensation bei akuter Infektion. Der Patient ist kritisch und braucht sofortige Intervention.',
+          nursing: 'Pflegerelevant: NOTFALL! Sofortige Klinikeinweisung erforderlich. Blutkulturen und Sputum für Mikrobiologie abnehmen. Breitspektrum-Antibiotika nach Anordnung. Bei immunsupprimierten Patienten auch an opportunistische Erreger denken wie Pilze oder Pneumocystis. Blutzucker-Management, eventuell Insulin-Therapie. Intensivierung der Beatmungsunterstützung. Bei Patienten unter Langzeit-Cortison: Bei jedem Infektzeichen frühzeitig reagieren, da Infektionen schnell lebensbedrohlich werden können. Cave: Cortison nicht abrupt absetzen, Stress-Dosierung eventuell erhöhen.'
+        }
+      },
+      {
+        id: 58, mode: 'basic', complexity: 'Basis',
+        context: 'Heimbeatmungspatient, Stromausfall in der Nacht für zwei Stunden, Notfallbeatmung mit Ambubeutel durch Angehörige.',
+        ph: 7.33, pco2: 52, hco3: 27, be: 1, laktat: 1.5, na: 139, cl: 103, k: 4.2, glukose: 130,
+        primary: 'RESP_ACI', comp_basic: 'PARTIAL', comp_advanced: 'MET_PARTIAL',
+        explanation: {
+          pathophysiology: 'Bei Stromausfall und manueller Notfallbeatmung mit Ambubeutel ist es sehr schwierig, eine adäquate Ventilation aufrecht zu erhalten. Meist wird zu wenig Volumen oder zu selten beatmet, was zur CO₂-Retention führt. Die manuelle Beatmung über zwei Stunden ist für Angehörige extrem anstrengend. Das leicht erhöhte Laktat und die Hyperglykämie zeigen die Stress-Situation für den Patienten.',
+          compensation: 'Beginnende metabolische Kompensation, das Bikarbonat ist leicht erhöht. Dies zeigt, dass die Unterventilation über mehrere Stunden bestand.',
+          nursing: 'Pflegerelevant: Nach Wiederherstellung der Stromversorgung und Rückkehr zur maschinellen Beatmung den Patienten engmaschig überwachen. BGA-Kontrolle war hier richtig um das Ausmaß der Hyperkapnie zu erfassen. Wichtige Lernpunkte: Notfallplan mit der Familie durchgehen, Notstromaggregat oder batteriebetriebenes Beatmungsgerät als Backup organisieren. Schulung der Angehörigen in manueller Beatmung ist essentiell. Ambubeutel muss immer griffbereit sein. Kontakt zum Energieversorger herstellen um bei Patienten mit lebenserhaltenden Geräten vorrangige Wiederherstellung zu gewährleisten.'
+        }
+      },
+      {
+        id: 59, mode: 'advanced', complexity: 'Advanced',
+        context: 'Langzeitbeatmeter Patient mit Dekubitus Grad 3 am Steißbein, seit Tagen zunehmende Wundverschlechterung, Geruch.',
+        ph: 7.29, pco2: 38, hco3: 18, be: -7, laktat: 4.2, na: 135, cl: 98, k: 5.2, glukose: 175,
+        primary: 'MET_ACI', comp_basic: 'PARTIAL', comp_advanced: 'RESP_PARTIAL',
+        explanation: {
+          pathophysiology: 'Der infizierte Dekubitus ist Ausgangspunkt einer Sepsis. Bakterien aus der nekrotischen Wunde gelangen in die Blutbahn und führen zur systemischen Entzündungsreaktion. Das hohe Laktat von 4.2 zeigt die Gewebehypoxie und septische Komponente. Die metabolische Azidose entsteht durch die Laktatakkumulation. Der üble Geruch deutet auf anaerobe Bakterien hin, die besonders aggressiv sind.',
+          compensation: 'Teilweise respiratorische Kompensation, aber insuffizient bei so hohem Laktat. Die Hyperkaliämie ist Folge der Azidose und kann zu Herzrhythmusstörungen führen.',
+          nursing: 'Pflegerelevant: SEPTISCHER NOTFALL ausgehend von Dekubitus! Sofortige Klinikeinweisung für chirurgisches Debridement notwendig. Blutkulturen und Wundabstrich vor Antibiotika. Breitspektrum-Antibiotika gegen Anaerobier. Volumengabe, eventuell Katecholamine. Dies zeigt: Dekubitusprophylaxe und frühzeitige Wundversorgung sind überlebenswichtig bei immobilen Beatmungspatienten. Lagerung alle zwei Stunden, Wechseldruckmatratze, Hautpflege, Ernährungsstatus optimieren. EKG-Monitoring wegen Hyperkaliämie. Dieser Fall hätte durch konsequente Prophylaxe verhindert werden können.'
+        }
+      },
+      {
+        id: 60, mode: 'advanced', complexity: 'Advanced',
+        context: 'Heimbeatmeter Patient, Angehörige vergessen seit einer Woche die abendliche Medikamentengabe inkl. Protonenpumpenhemmer.',
+        ph: 7.33, pco2: 40, hco3: 21, be: -3, laktat: 1.1, na: 138, cl: 106, k: 4.8, glukose: 102,
+        primary: 'MET_ACI', comp_basic: 'NONE', comp_advanced: 'NONE',
+        explanation: {
+          pathophysiology: 'Ohne Protonenpumpenhemmer bei beatmeten Patienten steigt das Risiko für Stressulcera im Magen dramatisch. Die vermehrte Magensäureproduktion kann zu okkulten Blutungen führen. Bei Blutungen im oberen Gastrointestinaltrakt wird Hämoglobin zu Harnstoff abgebaut, was zur metabolischen Azidose führt. Die Hyperchlorämie deutet auf eine hyperchlorämische Azidose hin. Die Azidose ist noch mild, aber das Problem kann sich schnell verschlechtern.',
+          compensation: 'Keine Kompensation erkennbar bei dieser milden Azidose. Wichtig ist hier die frühzeitige Erkennung bevor es zu massiven Blutungen kommt.',
+          nursing: 'Pflegerelevant: Medikamentenplan überprüfen und mit Angehörigen besprechen. Protonenpumpenhemmer SOFORT wieder ansetzen. Kontrolle auf Zeichen gastrointestinaler Blutung: Teerstuhl, Hämatemesis, Anämie-Zeichen wie Blässe oder Tachykardie. Stuhl auf okkultes Blut testen. Bei beatmeten Patienten ist die Stress-Ulkus-Prophylaxe essentiell und darf niemals vergessen werden. Medikamentendispenser für die Familie organisieren zur Vermeidung solcher Fehler. Regelmäßige Hämoglobin-Kontrollen bei Risikopatienten. Dies zeigt wie wichtig strukturierte Medikamentengabe und Schulung der Angehörigen sind.'
         }
       }
     ];
