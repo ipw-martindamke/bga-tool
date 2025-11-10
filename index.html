@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BGA-Tool (Advanced/Basis)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Inter Font */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f3f4f6; /* Tailwind gray-100 */
+    }
+    
+    /* Card-Stil */
+    .card {
+      background-color: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+    
+    /* Header-Stil */
+    .header {
+      background: linear-gradient(90deg, #1e3a8a, #2563eb); /* Tailwind blue-800 to blue-600 */
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+    }
+    
+    /* BGA-Werte Tabelle */
+    .bga-table {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 16px;
+    }
+    
+    .bga-item {
+      position: relative;
+      background-color: #f9fafb; /* Tailwind gray-50 */
+      border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+    }
+    .bga-item label {
+      display: block;
+      font-size: 0.875rem; /* 14px */
+      color: #4b5563; /* Tailwind gray-600 */
+      font-weight: 500;
+    }
+    .bga-item input {
+      font-size: 1.5rem; /* 24px */
+      font-weight: 700;
+      color: #111827; /* Tailwind gray-900 */
+      width: 100%;
+      border: none;
+      background: transparent;
+      text-align: center;
+      padding: 4px 0 0;
+      outline: none;
+    }
+    
+    /* Ampel-Farben */
+    .bga-item.norm-green { border-color: #10b981; background-color: #f0fdf4; } /* green */
+    .bga-item.norm-red { border-color: #ef4444; background-color: #fef2f2; }   /* red */
+    .bga-item.norm-blue { border-color: #3b82f6; background-color: #eff6ff; } /* blue */
+
+    /* Tooltip */
+    .tooltip {
+      position: absolute;
+      top: 2px;
+      right: 5px;
+      cursor: help;
+      color: #9ca3af; /* Tailwind gray-400 */
+    }
+    .tooltip .tooltip-text {
+      visibility: hidden;
+      width: 220px;
+      background-color: #111827; /* Tailwind gray-900 */
+      color: #fff;
+      text-align: left;
+      border-radius: 6px;
+      padding: 8px;
+      position: absolute;
+      z-index: 10;
+      bottom: 125%;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      font-size: 0.75rem; /* 12px */
+      font-weight: 400;
+    }
+    .tooltip:hover .tooltip-text {
+      visibility: visible;
+      opacity: 1;
+    }
+    
+    /* Radio/Checkbox Buttons (Antwort-Buttons) */
+    .response-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    @media (min-width: 640px) {
+      .response-list.two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    
+    .response-list li {
+      margin: 0;
+    }
+    .response-list input[type="radio"] {
+      display: none; /* Verstecke den echten Radio-Button */
+    }
+    .response-list label {
+      display: block;
+      padding: 16px;
+      border: 1px solid #d1d5db; /* Tailwind gray-300 */
+      border-radius: 8px;
+      background-color: #f3f4f6; /* Tailwind gray-100 (inaktiv) */
+      color: #374151; /* Tailwind gray-700 */
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+    /* A11y: Fokus-Stil */
+    .response-list input[type="radio"]:focus-visible + label {
+       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5); /* Blauer Fokus-Ring */
+       border-color: #3b82f6; /* Tailwind blue-500 */
+    }
+    
+    /* Ausgewählter Zustand */
+    .response-list input[type="radio"]:checked + label {
+      background-color: #3b82f6; /* Tailwind blue-500 */
+      color: white;
+      border-color: #2563eb; /* Tailwind blue-600 */
+    }
+    
+    /* Deaktivierter Zustand */
+    .response-list input[type="radio"]:disabled + label {
+      background-color: #f3f4f6; /* Tailwind gray-100 */
+      color: #9ca3af; /* Tailwind gray-400 */
+      cursor: not-allowed;
+      border-color: #e5e7eb; /* Tailwind gray-200 */
+    }
+    fieldset:disabled .response-list label {
+        background-color: #f3f4f6; /* Tailwind gray-100 */
+        color: #9ca3af; /* Tailwind gray-400 */
+        cursor: not-allowed;
+        border-color: #e5e7eb; /* Tailwind gray-200 */
+    }
+
+    /* Buttons (Nav-Buttons) */
+    .btn {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-primary {
+      background-color: #2563eb; /* Tailwind blue-600 */
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #1d4ed8; /* Tailwind blue-700 */
+    }
+    .btn-secondary {
+      background-color: #e5e7eb; /* Tailwind gray-200 */
+      color: #374151; /* Tailwind gray-700 */
+    }
+    .btn-secondary:hover {
+      background-color: #d1d5db; /* Tailwind gray-300 */
+    }
+    .btn-gemini {
+      background-color: #fde68a; /* Tailwind yellow-200 */
+      color: #78350f; /* Tailwind yellow-900 */
+      border: 1px solid #fcd34d; /* Tailwind yellow-400 */
+    }
+    .btn-gemini:hover {
+      background-color: #facc15; /* Tailwind yellow-400 */
+    }
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    /* Modus-Umschalter */
+    .mode-switch {
+      display: flex;
+      border-radius: 8px;
+      background-color: #e5e7eb; /* Tailwind gray-200 */
+      padding: 4px;
+      width: fit-content;
+    }
+    .mode-switch input[type="radio"] {
+      display: none;
+    }
+    .mode-switch label {
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      color: #4b5563; /* Tailwind gray-600 */
+      transition: all 0.2s ease;
+    }
+    .mode-switch input[type="radio"]:checked + label {
+      background-color: #ffffff;
+      color: #111827; /* Tailwind gray-900 */
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    /* Spickzettel & Ausklapp-Boxen */
+    details {
+      background-color: #f9fafb; /* Tailwind gray-50 */
+      border: 1px solid #e5e7eb; /* Tailwind gray-200 */
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    details summary {
+      padding: 16px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #1f2937; /* Tailwind gray-800 */
+      list-style: none; /* Entfernt den Pfeil (wird durch Tailwind-Icon ersetzt) */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    details summary::-webkit-details-marker {
+      display: none; /* Entfernt den Pfeil (Chrome) */
+    }
+    details .content {
+      padding: 0 16px 16px;
+      border-top: 1px solid #e5e7eb; /* Tailwind gray-200 */
+    }
+    
+    /* KI-Boxen */
+    .gemini-result-box {
+      background-color: #fdfdea; /* Helles Gelb */
+      border: 1px solid #fde047; /* Tailwind yellow-300 */
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    .gemini-result-box h4 {
+      margin: 0 0 8px;
+      color: #78350f; /* Tailwind yellow-900 */
+    }
+    
+    /* Status-Dot */
+    #status-dot {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background-color: #9ca3af; /* Tailwind gray-400 */
+    }
+    
+    /* Utility */
+    .hidden {
+      display: none;
+    }
+
+  </style>
+</head>
+<body class="p-4 md:p-8">
+
+  <div class="max-w-3xl mx-auto">
+    
+    <!-- Header -->
+    <header class="header">
+      <div class="flex justify-between items-center">
+        <h1 class="text-xl md:text-2xl font-bold">BGA-Trainer (Basis / Advanced)</h1>
+        <div id="mode-chip" class="bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full">
+          BASIS MODUS
+        </div>
+      </div>
+    </header>
+
+    <!-- Modus-Umschalter -->
+    <div class="card flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800 m-0">Lern-Modus</h2>
+        <p class="text-gray-600 m-0 text-sm">Wähle deinen Erfahrungsgrad.</p>
+      </div>
+      <div class="mode-switch">
+        <input type="radio" id="mode-basic" name="mode" value="basic" checked>
+        <label for="mode-basic">Basis</label>
+        <input type="radio" id="mode-advanced" name="mode" value="advanced">
+        <label for="mode-advanced">Advanced</label>
+      </div>
+    </div>
+
+    <!-- 1. Fall-Anzeige -->
+    <div class="card">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-lg font-semibold text-gray-800 m-0">
+          Fall #<span id="case-id">1</span>
+          <span id="case-tags" class="text-sm font-normal text-gray-500 ml-2"></span>
+        </h2>
+      </div>
+
+      <!-- Grundwerte (Immer sichtbar) -->
+      <h3 class="text-base font-semibold text-gray-700 mb-3">Grundwerte</h3>
+      <div class="bga-table mb-4" id="bga-grundwerte">
+        <!-- pH -->
+        <div class="bga-item" id="item-ph">
+          <label for="ph">pH</label>
+          <input type="number" id="ph" step="0.01" value="7.40">
+          <div class="tooltip">?
+            <span class="tooltip-text">Maß für den Säure-Basen-Status. Niedrig = Azidose (sauer), Hoch = Alkalose (basisch).</span>
+          </div>
+        </div>
+        <!-- pCO₂ -->
+        <div class="bga-item" id="item-pco2">
+          <label for="pco2">pCO₂ (mmHg)</label>
+          <input type="number" id="pco2" step="0.1" value="40.0">
+          <div class="tooltip">?
+            <span class="tooltip-text">Partialdruck von Kohlendioxid. Der *respiratorische* Parameter. Hoch = Azidose, Niedrig = Alkalose.</span>
+          </div>
+        </div>
+        <!-- HCO₃⁻ -->
+        <div class="bga-item" id="item-hco3">
+          <label for="hco3">HCO₃⁻ (mmol/L)</label>
+          <input type="number" id="hco3" step="0.1" value="24.0">
+          <div class="tooltip">?
+            <span class="tooltip-text">Bikarbonat. Der *metabolische* Parameter. Niedrig = Azidose, Hoch = Alkalose.</span>
+          </div>
+        </div>
+        <!-- BE -->
+        <div class="bga-item" id="item-be">
+          <label for="be">BE (mmol/L)</label>
+          <input type="number" id="be" step="0.1" value="0.0">
+          <div class="tooltip">?
+            <span class="tooltip-text">Base Excess (Basenüberschuss). Zeigt die Summe der metabolischen Pufferbasen. Niedrig = Azidose, Hoch = Alkalose.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Erweiterte Werte (Nur Advanced) -->
+      <div id="advanced-values-container" class="hidden">
+        <h3 class="text-base font-semibold text-gray-700 mb-3">Erweiterte Werte</h3>
+        <div class="bga-table">
+          <!-- Laktat -->
+          <div class="bga-item" id="item-laktat">
+            <label for="laktat">Laktat (mmol/L)</label>
+            <input type="number" id="laktat" step="0.1" value="1.0">
+            <div class="tooltip">?
+              <span class="tooltip-text">Endprodukt des anaeroben Stoffwechsels. Erhöht bei Schock/Sepsis, verursacht metabolische Azidose.</span>
+            </div>
+          </div>
+          <!-- Na⁺ -->
+          <div class="bga-item" id="item-na">
+            <label for="na">Na⁺ (mmol/L)</label>
+            <input type="number" id="na" step="1" value="140">
+            <div class="tooltip">?
+              <span class="tooltip-text">Natrium. Wichtigstes Kation, relevant für Anionenlücke und Osmolarität.</span>
+            </div>
+          </div>
+          <!-- Cl⁻ -->
+          <div class="bga-item" id="item-cl">
+            <label for="cl">Cl⁻ (mmol/L)</label>
+            <input type="number" id="cl" step="1" value="105">
+            <div class="tooltip">?
+              <span class="tooltip-text">Chlorid. Wichtigstes Anion, relevant für Anionenlücke (hyperchlorämische Azidose).</span>
+            </div>
+          </div>
+          <!-- K⁺ -->
+          <div class="bga-item" id="item-k">
+            <label for="k">K⁺ (mmol/L)</label>
+            <input type="number" id="k" step="0.1" value="4.0">
+            <div class="tooltip">?
+              <span class="tooltip-text">Kalium. Wichtig für Herzfunktion. Verschiebt sich oft bei Azidose (Hyperkaliämie) oder Alkalose (Hypokaliämie).</span>
+            </div>
+          </div>
+          <!-- Glukose -->
+          <div class="bga-item" id="item-glukose">
+            <label for="glukose">Glukose (mg/dL)</label>
+            <input type="number" id="glukose" step="1" value="100">
+            <div class="tooltip">?
+              <span class="tooltip-text">Blutzuckerwert. Stark erhöhte Werte sind relevant bei diabetischer Ketoazidose, einer häufigen Ursache metabolischer Azidose.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+    
+    <!-- NORMWErt-BOX (Spickzettel) -->
+    <details id="norm-box">
+      <summary>
+        Normwerte (Spickzettel)
+        <!-- Heroicon: chevron-down -->
+        <svg class="w-5 h-5 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </summary>
+      <div class="content text-sm text-gray-700">
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>pH:</strong> 7.35 – 7.45</li>
+          <li><strong>pCO₂:</strong> 35 – 45 mmHg</li>
+          <li><strong>HCO₃⁻:</strong> 22 – 26 mmol/L</li>
+          <li><strong>BE:</strong> -2 – +2 mmol/L</li>
+        </ul>
+        <p class="mt-2 text-xs text-gray-500">(Beachten Sie, dass die Normwerte je nach Labor leicht abweichen können.)</p>
+      </div>
+    </details>
+
+    <!-- 2. Antwort-Box (Primäre Störung) -->
+    <div class="card">
+      <h2 class="text-lg font-semibold text-gray-800 m-0 mb-4">1. Primäre Störung</h2>
+      <fieldset id="primary-fieldset">
+        <ul class="response-list two-col">
+          <li><input type="radio" id="p-normal" name="primary" value="NORMAL"><label for="p-normal">Normal</label></li>
+          <li><input type="radio" id="p-resp-aci" name="primary" value="RESP_ACI"><label for="p-resp-aci">Respiratorische Azidose</label></li>
+          <li><input type="radio" id="p-resp-alk" name="primary" value="RESP_ALK"><label for="p-resp-alk">Respiratorische Alkalose</label></li>
+          <li><input type="radio" id="p-met-aci" name="primary" value="MET_ACI"><label for="p-met-aci">Metabolische Azidose</label></li>
+          <li><input type="radio" id="p-met-alk" name="primary" value="MET_ALK"><label for="p-met-alk">Metabolische Alkalose</label></li>
+          <li id="p-mixed-li" class="hidden"><input type="radio" id="p-mixed" name="primary" value="P_MIXED"><label for="p-mixed">Gemischte Störung</label></li>
+        </ul>
+      </fieldset>
+    </div>
+
+    <!-- 3. Antwort-Box (Kompensation) -->
+    <div class="card">
+      <!-- Basis Kompensation -->
+      <fieldset id="comp-basic-fieldset" disabled>
+        <legend class="text-lg font-semibold text-gray-800 m-0 mb-4">2. Kompensation (Basis)</legend>
+        <ul class="response-list">
+          <li><input type="radio" id="c-none" name="comp_basic" value="NONE"><label for="c-none">Keine Kompensation</label></li>
+          <li><input type="radio" id="c-partial" name="comp_basic" value="PARTIAL"><label for="c-partial">Teilweise kompensiert</label></li>
+          <li><input type="radio" id="c-full" name="comp_basic" value="FULL"><label for="c-full">Vollständig kompensiert</label></li>
+        </ul>
+      </fieldset>
+      
+      <!-- Advanced Kompensation -->
+      <fieldset id="comp-advanced-fieldset" class="hidden" disabled>
+        <legend class="text-lg font-semibold text-gray-800 m-0 mb-4">2. Kompensations-Analyse (Advanced)</legend>
+        <ul class="response-list two-col">
+          <li><input type="radio" id="ca-none" name="comp_advanced" value="NONE"><label for="ca-none">Keine Kompensation</label></li>
+          <li><input type="radio" id="ca-resp-partial" name="comp_advanced" value="RESP_PARTIAL"><label for="ca-resp-partial">Respiratorische Teil-Komp.</label></li>
+          <li><input type="radio" id="ca-met-partial" name="comp_advanced" value="MET_PARTIAL"><label for="ca-met-partial">Metabolische Teil-Komp.</label></li>
+          <li><input type="radio" id="ca-resp-full" name="comp_advanced" value="RESP_FULL"><label for="ca-resp-full">Respiratorische Voll-Komp.</label></li>
+          <li><input type="radio" id="ca-met-full" name="comp_advanced" value="MET_FULL"><label for="ca-met-full">Metabolische Voll-Komp.</label></li>
+          <li><input type="radio" id="ca-mixed" name="comp_advanced" value="C_MIXED"><label for="ca-mixed">Gemischte Störung (Komp. nicht adäquat)</label></li>
+        </ul>
+      </fieldset>
+    </div>
+
+    <!-- 4. Auswertung & Navigation -->
+    <div class="card">
+      <!-- Auswertungsergebnis -->
+      <details id="explain-wrap" class="mb-4">
+        <summary id="result-title">
+          <div class="flex items-center">
+            <span id="status-dot"></span>
+            Bitte Werte auswerten
+          </div>
+          <!-- Heroicon: chevron-down -->
+          <svg class="w-5 h-5 transition-transform duration-200" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="content text-sm text-gray-700" id="explanation">
+          Bitte wähle eine primäre Störung und die Kompensation aus und klicke auf "Auswerten".
+        </div>
+      </details>
+      
+      <!-- KI-Erklär-Buttons -->
+      <div id="gemini-explain-container" class="hidden">
+        <button id="gemini-explain-btn" class="btn btn-gemini w-full mb-3">
+          ✨ Klinische Bedeutung erklären
+        </button>
+        <div id="gemini-explain-loader" class="text-sm text-gray-600 text-center hidden mb-3">
+          <p>KI-Erklärung wird geladen...</p>
+        </div>
+        <div id="gemini-explain-result" class="gemini-result-box hidden"></div>
+      </div>
+
+      <!-- Navigationsbuttons -->
+      <div class="flex flex-wrap gap-3">
+        <button id="evalbutton" class="btn btn-primary flex-1">Auswerten</button>
+        <button id="resetbutton" class="btn btn-secondary">Zurücksetzen</button>
+        <button id="nextcasebutton" class="btn btn-secondary">Nächster Fall</button>
+      </div>
+      
+    </div>
+    
+    <!-- 5. Fall-Generator -->
+    <div class="card">
+      <h2 class="text-lg font-semibold text-gray-800 m-0 mb-4">Fall-Generator</h2>
+      <p class="text-sm text-gray-600 mb-4">
+        Keine Standardfälle mehr? Lass die KI einen neuen, klinisch plausiblen Fall für deinen gewählten Modus generieren.
+      </p>
+      <button id="gemini-generate-btn" class="btn btn-gemini w-full">
+        ✨ Neuen Fall von KI generieren
+      </button>
+      <div id="gemini-generate-loader" class="text-sm text-gray-600 text-center hidden mt-3">
+        <p>Neuer KI-Fall wird generiert...</p>
+      </div>
+    </div>
+
+  </div> <!-- /max-w-3xl -->
+
+  <!-- NEUER HAFTUNGSAUSSCHLUSS (FOOTER) -->
+  <footer class="max-w-3xl mx-auto text-center text-xs text-gray-500 mt-8 mb-4 px-4">
+    <p><strong>Wichtiger Hinweis (Haftungsausschluss):</strong><br>
+    Dieses Tool dient ausschließlich zu Übungs- und Schulungszwecken. Die dargestellten Fälle, Werte und KI-generierten Erklärungen sind nicht zur Stellung medizinischer Diagnosen oder als Ersatz für professionellen medizinischen Rat, eine Diagnose oder eine Behandlung gedacht. Die Nutzung erfolgt auf eigene Gefahr. Es wird keine Haftung für die Richtigkeit oder Vollständigkeit der Inhalte übernommen.</p>
+  </footer>
+  <!-- ENDE HAFTUNGSAUSSCHLUSS -->
+
+  <script>
+    // --- NORMBEREICHE (Global) ---
+    // Diese sind jetzt global verfügbar
+    const NORMBEREICHE = {
+      ph: { min: 7.35, max: 7.45 },
+      pco2: { min: 35, max: 45 },
+      hco3: { min: 22, max: 26 },
+      be: { min: -2, max: 2 },
+      laktat: { min: 0.5, max: 2.0 }, // Beispielwerte
+      na: { min: 135, max: 145 },
+      cl: { min: 98, max: 108 },
+      k: { min: 3.5, max: 5.0 },
+      glukose: { min: 70, max: 110 }
+    };
+
+    // --- STANDARD-FÄLLE (CSV-Format) ---
+    const defaultCSVData = `
+ph,pco2,hco3,be,laktat,na,cl,k,glukose,primary,comp_basic,comp_advanced,tags,notes
+7.350,45.0,25.0,0.0,1.0,140,105,4.0,100,NORMAL,NONE,NONE,Standard,Normale BGA
+7.300,59.0,27.0,-1.0,1.1,141,106,4.1,110,RESP_ACI,PARTIAL,MET_PARTIAL,Standard,Respiratorische Azidose, teilw. kompensiert
+7.100,79.0,26.0,-2.0,1.3,139,104,4.5,120,RESP_ACI,NONE,NONE,Standard,Respiratorische Azidose, nicht kompensiert
+7.600,35.0,37.0,8.0,0.9,145,100,3.8,105,MET_ALK,NONE,NONE,Standard,Metabolische Alkalose, nicht kompensiert
+7.450,30.0,30.0,5.0,1.0,142,102,3.9,100,MET_ALK,FULL,RESP_FULL,Standard,Metabolische Alkalose, voll kompensiert (respiratorisch)
+7.350,55.0,30.0,4.0,1.2,140,103,4.2,115,RESP_ACI,FULL,MET_FULL,Standard,Respiratorische Azidose, voll kompensiert (metabolisch)
+6.750,112.0,20.0,-5.0,4.5,138,98,5.1,180,RESP_ACI,NONE,C_MIXED,Kombiniert,Schwere resp. Azidose, beginnende met. Azidose (Laktat)
+7.310,50.0,29.0,3.0,1.0,141,104,4.0,100,RESP_ACI,PARTIAL,MET_PARTIAL,Standard,Respiratorische Azidose, teilw. kompensiert
+7.240,86.0,36.6,5.5,1.5,143,100,4.8,130,RESP_ACI,PARTIAL,MET_PARTIAL,Standard,Respiratorische Azidose, teilw. kompensiert
+7.480,32.5,24.2,-0.5,0.8,140,105,3.7,95,RESP_ALK,NONE,NONE,Standard,Respiratorische Alkalose, nicht kompensiert
+7.560,29.6,20.1,-1.8,1.1,139,106,3.6,100,RESP_ALK,PARTIAL,MET_PARTIAL,Standard,Respiratorische Alkalose, teilw. kompensiert
+7.150,35.0,18.1,-7.0,5.5,135,95,5.5,450,MET_ACI,PARTIAL,RESP_PARTIAL,Advanced,Met. Azidose (Ketoazidose/Laktat), teilw. kompensiert
+7.600,45.0,33.0,7.0,1.0,144,101,3.4,110,MET_ALK,NONE,NONE,Standard,Metabolische Alkalose, nicht kompensiert
+7.000,66.0,20.0,-6.0,3.0,138,100,5.0,150,RESP_ACI,NONE,C_MIXED,Kombiniert,Kombinierte Azidose (Resp + Met)
+7.141,100.7,33.6,3.0,1.8,141,102,4.7,140,RESP_ACI,PARTIAL,MET_PARTIAL,Standard,Respiratorische Azidose, teilw. kompensiert
+7.541,29.7,24.9,1.5,1.0,140,105,3.9,100,RESP_ALK,NONE,NONE,Standard,Respiratorische Alkalose, nicht kompensiert
+7.076,40.0,15.0,-12.0,8.0,137,90,5.8,300,MET_ACI,PARTIAL,RESP_PARTIAL,Advanced,Schwere Met. Azidose (Laktat/Keto), teilw. kompensiert
+7.250,30.0,15.0,-10.0,6.5,136,92,5.6,250,MET_ACI,PARTIAL,RESP_PARTIAL,Advanced,Met. Azidose (Laktat/Keto), teilw. kompensiert
+7.440,50.0,34.0,8.0,1.2,142,100,3.7,110,MET_ALK,PARTIAL,RESP_PARTIAL,Standard,Met. Alkalose, teilw. kompensiert (Hypoventilation)
+`;
+    // HIER WEITERE FÄLLE EINTRAGEN (im CSV-Format, jede Zeile ein Fall)
+    
+    // --- GLOBALE VARIABLEN ---
+    let cases = [];
+    let currentIndex = 0;
+    let currentMode = 'basic'; // 'basic' or 'advanced'
+
+    // --- DOM-Elemente ---
+    const form = document.getElementById('bga-grundwerte').closest('form') || document.body;
+    const caseId = document.getElementById('case-id');
+    const caseTags = document.getElementById('case-tags');
+    
+    // Eingabefelder
+    const inputs = {
+      ph: document.getElementById('ph'),
+      pco2: document.getElementById('pco2'),
+      hco3: document.getElementById('hco3'),
+      be: document.getElementById('be'),
+      laktat: document.getElementById('laktat'),
+      na: document.getElementById('na'),
+      cl: document.getElementById('cl'),
+      k: document.getElementById('k'),
+      glukose: document.getElementById('glukose')
+    };
+
+    // Container
+    const advancedValuesContainer = document.getElementById('advanced-values-container');
+    
+    // Antwort-Fieldsets
+    const primaryFieldset = document.getElementById('primary-fieldset');
+    const pMixedLi = document.getElementById('p-mixed-li');
+    const compBasicFieldset = document.getElementById('comp-basic-fieldset');
+    const compAdvancedFieldset = document.getElementById('comp-advanced-fieldset');
+
+    // Ergebnis-Boxen
+    const explainWrap = document.getElementById('explain-wrap');
+    const resultTitle = document.getElementById('result-title');
+    const explanationBox = document.getElementById('explanation');
+    const statusDot = document.getElementById('status-dot');
+    const modeChip = document.getElementById('mode-chip');
+    
+    // Mode-Umschalter
+    const modeRadios = document.querySelectorAll('input[name="mode"]');
+    
+    // KI-Buttons & Loader
+    const geminiExplainContainer = document.getElementById('gemini-explain-container');
+    const geminiExplainBtn = document.getElementById('gemini-explain-btn');
+    const geminiExplainLoader = document.getElementById('gemini-explain-loader');
+    const geminiExplainResult = document.getElementById('gemini-explain-result');
+    const geminiGenerateBtn = document.getElementById('gemini-generate-btn');
+    const geminiGenerateLoader = document.getElementById('gemini-generate-loader');
+
+
+    // --- FUNKTIONEN ---
+
+    /**
+     * Parst den rohen CSV-Text in ein Array von Fall-Objekten.
+     */
+    function parseCSV(text) {
+      const lines = text.trim().split('\n');
+      if (lines.length < 2) return [];
+      
+      const header = lines[0].split(',').map(h => h.trim());
+      
+      return lines.slice(1).map(line => {
+        const values = line.split(',');
+        const obj = {};
+        header.forEach((key, i) => {
+          const value = values[i] ? values[i].trim() : '';
+          // Konvertiere Zahlen, behalte Strings bei
+          if (key === 'ph' || key === 'pco2' || key === 'hco3' || key === 'be' || key === 'laktat' || key === 'k') {
+            obj[key] = parseFloat(value);
+          } else if (key === 'na' || key === 'cl' || key === 'glukose') {
+            obj[key] = parseInt(value, 10);
+          } else {
+            obj[key] = value;
+          }
+        });
+        return obj;
+      });
+    }
+
+    /**
+     * Gibt lesbare Labels für die Störungs-Keys zurück.
+     */
+    function getLabel(key) {
+      const labels = {
+        NORMAL: 'Normal',
+        RESP_ACI: 'Respiratorische Azidose',
+        RESP_ALK: 'Respiratorische Alkalose',
+        MET_ACI: 'Metabolische Azidose',
+        MET_ALK: 'Metabolische Alkalose',
+        P_MIXED: 'Gemischte Störung',
+        NONE: 'Keine Kompensation',
+        PARTIAL: 'Teilweise Kompensation',
+        FULL: 'Vollständige Kompensation',
+        RESP_PARTIAL: 'Respiratorische Teil-Kompensation',
+        MET_PARTIAL: 'Metabolische Teil-Kompensation',
+        RESP_FULL: 'Respiratorische Voll-Kompensation',
+        MET_FULL: 'Metabolische Voll-Kompensation',
+        C_MIXED: 'Gemischte Störung (Komp. nicht adäquat)'
+      };
+      return labels[key] || key;
+    }
+
+    /**
+     * Setzt die Ampel-Farben für die BGA-Werte basierend auf Norm.
+     */
+    function setAmpelColor(key, value) {
+        const item = document.getElementById(`item-${key}`);
+        if (!item) return;
+
+        item.classList.remove('norm-green', 'norm-red', 'norm-blue');
+        
+        const norm = NORMBEREICHE[key];
+        if (!norm) return; // Keine Norm für dieses Item
+
+        if (value >= norm.min && value <= norm.max) {
+            item.classList.add('norm-green');
+        } else if (key === 'ph' || key === 'pco2' || key === 'be' || key === 'laktat') {
+            // pH, pCO2, BE, Laktat: Abweichung in beide Richtungen ist "rot"
+            item.classList.add('norm-red');
+        } else {
+            // Na, Cl, K, Glukose: Abweichung ist "blau" (informativ)
+            item.classList.add('norm-blue');
+        }
+    }
+    
+    /**
+     * Aktualisiert die UI, um den aktuellen Fall anzuzeigen.
+     */
+    function renderCase(index) {
+      if (!cases[index]) return;
+      const c = cases[index];
+      
+      // Werte in Felder eintragen
+      for (const key in inputs) {
+        if (inputs[key] && c[key] !== undefined) {
+          inputs[key].value = c[key].toFixed(key === 'ph' ? 3 : 1);
+        } else if (inputs[key]) {
+          // Setze Standardwert, falls im CSV nicht vorhanden
+          inputs[key].value = NORMBEREICHE[key] ? NORMBEREICHE[key].min + (NORMBEREICHE[key].max - NORMBEREICHE[key].min) / 2 : 0;
+        }
+        
+        // Ampel-Farben setzen
+        if (inputs[key]) {
+            setAmpelColor(key, parseFloat(inputs[key].value));
+        }
+      }
+
+      // Tags & ID
+      caseId.textContent = index + 1;
+      caseTags.textContent = c.tags ? `(${c.tags})` : '';
+
+      // Formular zurücksetzen (Antworten löschen)
+      primaryFieldset.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      compBasicFieldset.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      compAdvancedFieldset.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      
+      // Kompensation deaktivieren (bis Primärstörung gewählt)
+      compBasicFieldset.disabled = true;
+      compAdvancedFieldset.disabled = true;
+
+      // Ergebnis-Box zurücksetzen
+      explainWrap.open = false;
+      resultTitle.innerHTML = `<span id="status-dot" style="background-color: #9ca3af;"></span> Bitte Werte auswerten`;
+      explanationBox.innerHTML = 'Bitte wähle eine primäre Störung und die Kompensation aus und klicke auf "Auswerten".';
+      
+      // KI-Boxen zurücksetzen
+      geminiExplainContainer.classList.add('hidden');
+      geminiExplainBtn.disabled = true;
+      geminiExplainResult.classList.add('hidden');
+      geminiExplainResult.textContent = '';
+      geminiExplainLoader.classList.add('hidden');
+      
+      // UI-Anpassung basierend auf Modus (wird von handleModeChange aufgerufen)
+      handleModeChange();
+    }
+    
+    /**
+     * Statische Analyse (Basis-Logik)
+     */
+    function analyzeBGA(ph, pco2, hco3) {
+      const { ph: nPh, pco2: nPco2, hco3: nHco3 } = NORMBEREICHE;
+      let primary, comp, steps = [];
+
+      // 1. pH-Status
+      if (ph < nPh.min) {
+        steps.push(`pH (${ph.toFixed(3)}) ist niedrig (< ${nPh.min}) → <strong>Azidose</strong>.`);
+        // 2. Ursache der Azidose
+        if (pco2 > nPco2.max) {
+          primary = 'RESP_ACI';
+          steps.push(`pCO₂ (${pco2.toFixed(1)}) ist hoch (> ${nPco2.max}) → <strong>Respiratorische</strong> Azidose.`);
+          // 3. Kompensation
+          if (hco3 > nHco3.max) {
+            comp = 'PARTIAL';
+            steps.push(`HCO₃⁻ (${hco3.toFixed(1)}) ist hoch (> ${nHco3.max}) → Metabolische Teil-Kompensation.`);
+          } else {
+            comp = 'NONE';
+            steps.push(`HCO₃⁻ (${hco3.toFixed(1)}) ist im Normbereich → Keine Kompensation.`);
+          }
+        } else if (hco3 < nHco3.min) {
+          primary = 'MET_ACI';
+          steps.push(`HCO₃⁻ (${hco3.toFixed(1)}) ist niedrig (< ${nHco3.min}) → <strong>Metabolische</strong> Azidose.`);
+          // 3. Kompensation
+          if (pco2 < nPco2.min) {
+            comp = 'PARTIAL';
+            steps.push(`pCO₂ (${pco2.toFixed(1)}) ist niedrig (< ${nPco2.min}) → Respiratorische Teil-Kompensation.`);
+          } else {
+            comp = 'NONE';
+            steps.push(`pCO₂ (${pco2.toFixed(1)}) ist im Normbereich → Keine Kompensation.`);
+          }
+        } else {
+          primary = 'P_MIXED'; // Azidose, aber pCO2 und HCO3 normal/gegensätzlich
+          comp = 'C_MIXED';
+          steps.push(`Weder pCO₂ noch HCO₃⁻ erklären die Azidose → <strong>Gemischte Störung</strong>.`);
+        }
+      } else if (ph > nPh.max) {
+        steps.push(`pH (${ph.toFixed(3)}) ist hoch (> ${nPh.max}) → <strong>Alkalose</strong>.`);
+        // 2. Ursache der Alkalose
+        if (pco2 < nPco2.min) {
+          primary = 'RESP_ALK';
+          steps.push(`pCO₂ (${pco2.toFixed(1)}) ist niedrig (< ${nPco2.min}) → <strong>Respiratorische</strong> Alkalose.`);
+          // 3. Kompensation
+          if (hco3 < nHco3.min) {
+            comp = 'PARTIAL';
+            steps.push(`HCO₃⁻ (${hco3.toFixed(1)}) ist niedrig (< ${nHco3.min}) → Metabolische Teil-Kompensation.`);
+          } else {
+            comp = 'NONE';
+            steps.push(`HCO₃⁻ (${hco3.toFixed(1)}) ist im Normbereich → Keine Kompensation.`);
+          }
+        } else if (hco3 > nHco3.max) {
+          primary = 'MET_ALK';
+          steps.push(`HCO₃⁻ (${hco3.toFixed(1)}) ist hoch (> ${nHco3.max}) → <strong>Metabolische</strong> Alkalose.`);
+          // 3. Kompensation
+          if (pco2 > nPco2.max) {
+            comp = 'PARTIAL';
+            steps.push(`pCO₂ (${pco2.toFixed(1)}) ist hoch (> ${nPco2.max}) → Respiratorische Teil-Kompensation.`);
+          } else {
+            comp = 'NONE';
+            steps.push(`pCO₂ (${pco2.toFixed(1)}) ist im Normbereich → Keine Kompensation.`);
+          }
+        } else {
+          primary = 'P_MIXED';
+          comp = 'C_MIXED';
+          steps.push(`Weder pCO₂ noch HCO₃⁻ erklären die Alkalose → <strong>Gemischte Störung</strong>.`);
+        }
+      } else {
+        // pH ist normal
+        steps.push(`pH (${ph.toFixed(3)}) ist im Normbereich (${nPh.min} - ${nPh.max}).`);
+        // 4. Vollständige Kompensation?
+        if (pco2 > nPco2.max && hco3 > nHco3.max) {
+          primary = 'RESP_ACI'; // Oder MET_ALK, aber RESP_ACI ist wahrscheinlicher
+          comp = 'FULL';
+          steps.push(`pCO₂ (${pco2.toFixed(1)}) und HCO₃⁻ (${hco3.toFixed(1)}) sind beide hoch → <strong>Vollständig kompensierte Störung</strong> (wahrsch. respiratorische Azidose).`);
+        } else if (pco2 < nPco2.min && hco3 < nHco3.min) {
+          primary = 'MET_ACI'; // Oder RESP_ALK
+          comp = 'FULL';
+          steps.push(`pCO₂ (${pco2.toFixed(1)}) und HCO₃⁻ (${hco3.toFixed(1)}) sind beide niedrig → <strong>Vollständig kompensierte Störung</strong> (wahrsch. metabolische Azidose).`);
+        } else {
+          primary = 'NORMAL';
+          comp = 'NONE';
+          steps.push(`pCO₂ (${pco2.toFixed(1)}) und HCO₃⁻ (${hco3.toFixed(1)}) sind ebenfalls im Normbereich → <strong>Normale BGA</strong>.`);
+        }
+      }
+
+      return { primary, comp, steps };
+    }
+    
+    /**
+     * Sammelt die Benutzereingaben aus dem Formular.
+     */
+    function getUserSelection() {
+      const primaryEl = document.querySelector('input[name="primary"]:checked');
+      
+      // Je nach Modus das richtige Kompensationsfeld auslesen
+      const compKey = currentMode === 'basic' ? 'comp_basic' : 'comp_advanced';
+      const compEl = document.querySelector(`input[name="${compKey}"]:checked`);
+      
+      return {
+        primary: primaryEl ? primaryEl.value : null,
+        comp: compEl ? compEl.value : null
+      };
+    }
+    
+    /**
+     * Behandelt die Änderung des Modus (Basic/Advanced).
+     */
+    function handleModeChange() {
+      const newMode = document.querySelector('input[name="mode"]:checked').value;
+      currentMode = newMode;
+      
+      if (currentMode === 'basic') {
+        modeChip.textContent = 'BASIS MODUS';
+        advancedValuesContainer.classList.add('hidden');
+        compBasicFieldset.style.display = 'block';
+        compAdvancedFieldset.style.display = 'none';
+        pMixedLi.classList.add('hidden');
+      } else {
+        modeChip.textContent = 'ADVANCED MODUS';
+        advancedValuesContainer.classList.remove('hidden');
+        compBasicFieldset.style.display = 'none';
+        compAdvancedFieldset.style.display = 'block';
+        pMixedLi.classList.remove('hidden');
+      }
+      
+      // Setze Antworten zurück, da sich die Optionen ändern
+      primaryFieldset.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      compBasicFieldset.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      compAdvancedFieldset.querySelectorAll('input[type="radio"]').forEach(r => r.checked = false);
+      compBasicFieldset.disabled = true;
+      compAdvancedFieldset.disabled = true;
+    }
+
+    /**
+     * Behandelt die Auswahl der Primärstörung (UI-Kohärenz).
+     */
+    function handlePrimarySelection() {
+      const primary = document.querySelector('input[name="primary"]:checked');
+      
+      if (!primary) {
+          compBasicFieldset.disabled = true;
+          compAdvancedFieldset.disabled = true;
+          return;
+      }
+
+      if (primary.value === 'NORMAL') {
+        // Deaktiviere Kompensation und setze auf "NONE"
+        compBasicFieldset.disabled = true;
+        compAdvancedFieldset.disabled = true;
+        document.getElementById('c-none').checked = true;
+        document.getElementById('ca-none').checked = true;
+      } else {
+        // Aktiviere das relevante Kompensationsfeld
+        if (currentMode === 'basic') {
+          compBasicFieldset.disabled = false;
+        } else {
+          compAdvancedFieldset.disabled = false;
+        }
+      }
+    }
+    
+    /**
+     * Ruft die Gemini-API auf (unsicher im Frontend, nur für Demo).
+     */
+    
+async function callGeminiAPI(prompt, isJsonMode = false) {
+  const model = "gemini-2.5-flash-preview-09-2025";
+  const payload = { contents: [{ parts: [{ text: prompt }]}] };
+  if (isJsonMode) {
+    payload.generationConfig = {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: "OBJECT",
+        properties: {
+          ph: { type: "NUMBER" },
+          pco2: { type: "NUMBER" },
+          hco3: { type: "NUMBER" },
+          be: { type: "NUMBER" },
+          laktat: { type: "NUMBER" },
+          na: { type: "NUMBER" },
+          cl: { type: "NUMBER" },
+          k: { type: "NUMBER" },
+          glukose: { type: "NUMBER" },
+          primary: { type: "STRING" },
+          comp_basic: { type: "STRING" },
+          comp_advanced: { type: "STRING" },
+          tags: { type: "STRING" }
+        }
+      }
+    };
+  }
+  try {
+    const resp = await fetch("/api/gemini", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model, payload })
+    });
+    if (!resp.ok) throw new Error("Proxy-Fehler: " + resp.status + " " + resp.statusText);
+    const data = await resp.json();
+    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    if (!text) throw new Error("Leere KI-Antwort");
+    return text;
+  } catch (e) {
+    console.error(e);
+    return "Fehler bei der KI-Anfrage: " + e.message;
+  }
+}
+`;
+
+      const payload = {
+        contents: [{ parts: [{ text: prompt }] }],
+      };
+      
+      if (isJsonMode) {
+          payload.generationConfig = {
+              responseMimeType: "application/json",
+              responseSchema: {
+                  type: "OBJECT",
+                  properties: {
+                      ph: { type: "NUMBER" },
+                      pco2: { type: "NUMBER" },
+                      hco3: { type: "NUMBER" },
+                      be: { type: "NUMBER" },
+                      laktat: { type: "NUMBER" },
+                      na: { type: "NUMBER" },
+                      cl: { type: "NUMBER" },
+                      k: { type: "NUMBER" },
+                      glukose: { type: "NUMBER" },
+                      primary: { type: "STRING" },
+                      comp_basic: { type: "STRING" },
+                      comp_advanced: { type: "STRING" },
+                      tags: { type: "STRING" }
+                  }
+              }
+          };
+      }
+
+      try {
+        const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`API-Fehler: ${response.status} ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!text) {
+          throw new Error("Keine gültige Antwort von der KI erhalten.");
+        }
+        
+        return text;
+
+      } catch (error) {
+        console.error("Gemini API-Aufruffehler:", error);
+        return `Fehler bei der KI-Anfrage: ${error.message}`;
+      }
+    }
+
+    /**
+     * Generiert einen KI-Fall.
+     */
+    async function handleGenerateCase() {
+      geminiGenerateBtn.disabled = true;
+      geminiGenerateLoader.classList.remove('hidden');
+
+      const modeInfo = currentMode === 'basic' 
+        ? "Basis-Modus (nur pH, pCO2, HCO3, BE)."
+        : "Advanced-Modus (alle Werte inkl. Laktat, Na, Cl, K, Glukose, BE).";
+      
+      const prompt = `
+        Generiere einen neuen, klinisch plausiblen BGA-Fall (Blutgasanalyse) für eine deutsche Pflegefachkraft.
+        Modus: ${modeInfo}
+        
+        Anforderungen:
+        1.  Wähle eine primäre Störung (RESP_ACI, RESP_ALK, MET_ACI, MET_ALK) oder NORMAL.
+        2.  Wähle einen Kompensationsstatus (NONE, PARTIAL, FULL, C_MIXED).
+        3.  Generiere realistische Werte für ALLE folgenden Felder, auch wenn sie im Basis-Modus nicht angezeigt werden: 
+            ph, pco2, hco3, be, laktat, na, cl, k, glukose.
+        4.  Stelle sicher, dass die Werte die Diagnose widerspiegeln.
+        5.  Gib die korrekten Diagnose-Keys für 'primary', 'comp_basic' und 'comp_advanced' an.
+            - comp_basic: (NONE, PARTIAL, FULL)
+            - comp_advanced: (NONE, RESP_PARTIAL, MET_PARTIAL, RESP_FULL, MET_FULL, C_MIXED)
+        6.  Füge einen kurzen Tag hinzu (z.B. "Ketoazidose", "COPD-Exazerbation", "Sepsis", "Hyperventilation").
+        
+        Antworte NUR mit dem JSON-Objekt im definierten Schema.
+      `;
+
+      try {
+        const jsonString = await callGeminiAPI(prompt, true);
+        const newCase = JSON.parse(jsonString); // KI gibt direkt JSON zurück
+
+        // Füge den neuen Fall zur Liste hinzu und rendere ihn
+        // (Wir fügen ihn nicht dauerhaft hinzu, nur für diese Ansicht)
+        const tempCase = { ...newCase, tags: `KI-generiert: ${newCase.tags || ''}` };
+        
+        // Erstelle einen temporären Index (zB -1) oder einen speziellen Weg
+        // Hier: Wir überschreiben einfach den aktuellen Index, aber markieren ihn
+        cases[currentIndex] = tempCase; // Überschreibt den aktuellen Fall
+        caseId.textContent = "KI";
+        caseTags.textContent = `(${tempCase.tags})`;
+        
+        // Werte in Felder eintragen
+        for (const key in inputs) {
+            if (inputs[key] && newCase[key] !== undefined) {
+                inputs[key].value = newCase[key].toFixed(key === 'ph' ? 3 : 1);
+                setAmpelColor(key, newCase[key]);
+            }
+        }
+        
+        // Reset UI
+        handlePrimarySelection(); // Setzt Kompensation zurück
+        explainWrap.open = false;
+        resultTitle.innerHTML = `<span id="status-dot" style="background-color: #9ca3af;"></span> Neuer KI-Fall geladen. Bitte auswerten.`;
+        explanationBox.innerHTML = 'Dieser Fall wurde von der KI generiert. Bitte wähle eine primäre Störung und die Kompensation aus.';
+        geminiExplainContainer.classList.add('hidden');
+        geminiExplainResult.classList.add('hidden');
+
+      } catch (error) {
+        resultTitle.innerHTML = `<span id="status-dot" style="background-color: #ef4444;"></span> KI-Fehler`;
+        explanationBox.innerHTML = `Fehler beim Generieren des Falls: ${error.message}`;
+        explainWrap.open = true;
+      } finally {
+        geminiGenerateBtn.disabled = false;
+        geminiGenerateLoader.classList.add('hidden');
+      }
+    }
+
+    /**
+     * Holt die KI-Erklärung für den aktuellen Fall.
+     */
+    async function handleExplainCase() {
+      geminiExplainBtn.disabled = true;
+      geminiExplainLoader.classList.remove('hidden');
+      geminiExplainResult.classList.add('hidden');
+
+      const c = cases[currentIndex];
+      const user = getUserSelection();
+      const diagnose = getLabel(c.primary);
+      const komp = currentMode === 'basic' ? getLabel(c.comp_basic) : getLabel(c.comp_advanced);
+      
+      const prompt = `
+        Du bist ein erfahrener Oberarzt der Intensivmedizin und erklärst einer deutschen Pflegefachkraft (im ${currentMode}-Modus) die klinische Bedeutung einer BGA.
+        Diagnose: ${diagnose} (${komp}).
+        
+        Werte:
+        - pH: ${inputs.ph.value}
+        - pCO₂: ${inputs.pco2.value}
+        - HCO₃⁻: ${inputs.hco3.value}
+        - BE: ${inputs.be.value}
+        ${currentMode === 'advanced' ? `
+        - Laktat: ${inputs.laktat.value}
+        - Na⁺: ${inputs.na.value}
+        - Cl⁻: ${inputs.cl.value}
+        - K⁺: ${inputs.k.value}
+        - Glukose: ${inputs.glukose.value}
+        ` : ''}
+
+        Aufgabe:
+        1.  Erkläre in 2-3 Sätzen, was diese Diagnose klinisch bedeutet.
+        2.  Nenne die 2-3 häufigsten *pflegerelevanten* Ursachen oder Konsequenzen (z.B. "COPD-Exazerbation", "Diabetische Ketoazidose", "Nierenversagen", "Hyperventilation bei Schmerz/Angst", "Erbrechen").
+        3.  Sprich die Pflegekraft direkt an. Halte es kurz und prägnant.
+        4.  Verwende KEINE LaTeX-Formatierung (keine $, \text, {}).
+        
+        Antworte NUR mit dem reinen Text der Erklärung.
+      `;
+
+      try {
+        const explanation = await callGeminiAPI(prompt);
+        geminiExplainResult.textContent = explanation;
+        geminiExplainResult.classList.remove('hidden');
+      } catch (error) {
+        geminiExplainResult.textContent = `Fehler beim Abrufen der Erklärung: ${error.message}`;
+        geminiExplainResult.classList.remove('hidden');
+      } finally {
+        geminiExplainLoader.classList.add('hidden');
+      }
+    }
+
+    // --- EVENT LISTENER ---
+
+    // Modus-Umschalter
+    modeRadios.forEach(radio => radio.addEventListener('change', () => {
+        handleModeChange();
+        renderCase(currentIndex); // Lädt den Fall im neuen Modus neu
+    }));
+
+    // Auswerten-Button
+    document.getElementById('evalbutton').addEventListener('click', () => {
+      const c = cases[currentIndex];
+      if (!c) return;
+
+      const user = getUserSelection();
+      
+      // Validiere, ob alles ausgewählt wurde
+      if (!user.primary || !user.comp) {
+        resultTitle.innerHTML = `<span id="status-dot" style="background-color: #f59e0b;"></span> Unvollständig`;
+        explanationBox.innerHTML = 'Bitte wähle sowohl die primäre Störung als auch die Kompensation aus.';
+        explainWrap.open = true;
+        return;
+      }
+
+      // Statische Analyse für die Schritt-für-Schritt-Erklärung (Basis-Modus-Logik)
+      const auto = analyzeBGA(
+        parseFloat(inputs.ph.value),
+        parseFloat(inputs.pco2.value),
+        parseFloat(inputs.hco3.value)
+      );
+
+      // Vergleiche User-Auswahl mit den korrekten Antworten aus dem CSV
+      const correctCompKey = currentMode === 'basic' ? c.comp_basic : c.comp_advanced;
+      const isCorrect = (user.primary === c.primary && user.comp === correctCompKey);
+      
+      const dotColor = isCorrect ? '#16a34a' : '#ef4444'; // Grün oder Rot
+      statusDot.style.backgroundColor = dotColor;
+
+      resultTitle.innerHTML = `<span id="status-dot" style="background:${dotColor}"></span>${isCorrect ? 'Korrekt' : 'Nicht korrekt'}`;
+      
+      const correctLabel = `${getLabel(c.primary)}${c.primary === 'NORMAL' ? '' : `, ${getLabel(correctCompKey)}`}`;
+      
+      explanationBox.innerHTML = `
+        <p><strong>Deine Analyse-Schritte:</strong></p>
+        <ul class="list-disc pl-5 text-xs space-y-1">
+          ${auto.steps.map(s => `<li>${s}</li>`).join('')}
+        </ul>
+        <p class="mt-3"><strong>Richtige Antwort:</strong> ${correctLabel}</p>
+      `;
+      explainWrap.open = true;
+      
+      // KI-Button nur anzeigen, wenn die Diagnose NICHT "Normal" ist
+      if (c.primary !== 'NORMAL') {
+          geminiExplainContainer.classList.remove('hidden');
+          geminiExplainBtn.disabled = false;
+          geminiExplainResult.classList.add('hidden'); // Verberge alte Erklärung
+      } else {
+          geminiExplainContainer.classList.add('hidden');
+      }
+    });
+
+    // Nächster Fall / Zurücksetzen
+    document.getElementById('nextcasebutton').addEventListener('click', () => {
+      if (!cases.length) return;
+      currentIndex = (currentIndex + 1) % cases.length;
+      renderCase(currentIndex);
+    });
+    document.getElementById('resetbutton').addEventListener('click', () => {
+      if (!cases.length) return;
+      renderCase(currentIndex); // Lädt den aktuellen Fall neu
+    });
+    
+    // UI-Kohärenz (Kompensation sperren)
+    primaryFieldset.addEventListener('change', handlePrimarySelection);
+    
+    // KI-Buttons
+    geminiGenerateBtn.addEventListener('click', handleGenerateCase);
+    geminiExplainBtn.addEventListener('click', handleExplainCase);
+
+    // --- INITIALISIERUNG ---
+    window.onload = () => {
+      // Setze Normwerte-Farben beim Start (für die Standardwerte)
+      for (const key in inputs) {
+          if (inputs[key]) {
+              setAmpelColor(key, parseFloat(inputs[key].value));
+          }
+      }
+        
+      // Lade Standard-Fälle
+      try {
+        cases = parseCSV(defaultCSVData);
+        if (cases.length > 0) {
+          currentIndex = 0;
+          renderCase(currentIndex);
+        } else {
+          throw new Error("Standard-Fälle (CSV) konnten nicht geladen werden.");
+        }
+      } catch (e) {
+        console.error(e);
+        explanationBox.innerHTML = `<p style="color: red;">Fehler: ${e.message}</p>`;
+        explainWrap.open = true;
+      }
+      
+      // Initiale UI-Anpassung (Basic Mode ist Standard)
+      handleModeChange();
+    };
+
+  </script>
+
+</body>
+</html>
